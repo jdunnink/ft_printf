@@ -23,9 +23,6 @@ int ft_printf(const char * restrict format, ...)
 
     dest = (char*)malloc(sizeof(char) * 1);
     dest[0] = '\0';
-    printf("\nThe starting format string: \n");
-    ft_putendl(format);
-
     va_start (a_list, format);
     while (*format != '\0')
     {
@@ -38,12 +35,23 @@ int ft_printf(const char * restrict format, ...)
                 tmp = ft_strdup((char *)va_arg(a_list, char *));
             else if (*format == 'i' || *format == 'd')
                 tmp = ft_itoa_base((int)va_arg(a_list, int), 10);
+            else if (*format == 'u')
+                tmp = ft_uitoa((unsigned int)va_arg(a_list, unsigned int));
             else if (*format == '%')
                 tmp = ft_ctostr(*format);
             else if (*format == 'p')
                 tmp = ft_strjoin("0x7fff", ft_itoa_base(va_arg(a_list, int), 16));
+            else if (*format == 'x')
+                tmp = ft_itoa_base(va_arg(a_list, int), 16);
+            else if (*format == 'X')
+                tmp = ft_itoa_base_uc(va_arg(a_list, int), 16);
             else if (*format == 'o')
                 tmp = ft_itoa_base(va_arg(a_list, int), 8);
+            else
+            {
+                ft_putendl("ERROR: format specifier not renognized");
+                return (-1);
+            }
         }
         else
             tmp = ft_strndup((char*)format, 1);
@@ -51,8 +59,7 @@ int ft_printf(const char * restrict format, ...)
         free(tmp);
         format++;
     }
-    printf("\nEnd result: \n");
-    ft_putendl(dest);
+    ft_putstr(dest);
     free(dest);
     va_end (a_list);
     return (0);
@@ -60,7 +67,8 @@ int ft_printf(const char * restrict format, ...)
 
 int main(void)
 {
-    int octal = 10;
-    ft_printf("This is a test: %p\n", &octal);
+    int test = 2334;
+    ft_printf("\nMy printf  : %p\n", &test);
+    printf("Real printf: %p\n\n", &test);
     return (0);
 }

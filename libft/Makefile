@@ -72,6 +72,8 @@ SRC =	ft_swap.c			\
 		ft_lstmap.c			\
 		ft_lstnew.c			\
 		ft_itoa_base.c		\
+		ft_itoa_base_uc.c 	\
+		ft_uitoa.c			\
 		ft_reversebits.c	\
 		ft_printbits.c		\
 		ft_swapbits.c		\
