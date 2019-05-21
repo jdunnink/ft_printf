@@ -54,13 +54,17 @@ char			*ft_itoa_base(int value, int base);
 char			*ft_itoa_base_uc(int value, int base);
 char			*ft_itoa(int n);
 char			*ft_uitoa(unsigned int n);
+char			*ft_dtoa(double value, int precision);
+char			*ft_ltoa(long int n);
 char			*ft_ctostr(char c);
 void			ft_striteri(char *s, void (*f)(unsigned int, char *));
 void			ft_striter(char *s, void (*f)(char *));
 void			ft_bzero(void *s, size_t n);
 void			ft_swap(int *a, int *b);
 int				ft_atoi(const char *str);
+long int		ft_atol(const char *str);
 int				ft_abs(int nb);
+long int		ft_labs(long int nb);
 int				ft_sqrt(int nb);
 
 char			**ft_strsplit(char const *s, char c);

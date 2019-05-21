@@ -1,19 +1,20 @@
-
-// %c	character
-// %s	a string of characters
-// %p   pointer adress
-
-// %d	decimal (integer) number (base 10)
-// %e	exponential floating-point number
-// %f	floating-point number
-// %i	integer (base 10)
-// %o	octal number (base 8)
-// %u	unsigned decimal (integer) number
-// %x	number in hexadecimal (base 16)
-// %%	print a percent sign
-// \%	print a percent sign
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   main.c                                             :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jdunnink <marvin@codam.nl>                   +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2019/05/21 18:24:54 by jdunnink      #+#    #+#                 */
+/*   Updated: 2019/05/21 18:25:04 by jdunnink      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "printf.h"
+
+// verify that a correct format specifier is used.
+// send the complete valid specifier to the dispatcher
+// dispatcher loads tmp string with the requied info.
 
 int ft_printf(const char * restrict format, ...)
 {
@@ -47,9 +48,11 @@ int ft_printf(const char * restrict format, ...)
                 tmp = ft_itoa_base_uc(va_arg(a_list, int), 16);
             else if (*format == 'o')
                 tmp = ft_itoa_base(va_arg(a_list, int), 8);
+            else if (*format == 'f' || *format == 'F')
+                tmp = ft_dtoa((double)va_arg(a_list, double), 6);
             else
             {
-                ft_putendl("ERROR: format specifier not renognized");
+                ft_putendl("ERROR: format specifier not recognized");
                 return (-1);
             }
         }
@@ -67,8 +70,11 @@ int ft_printf(const char * restrict format, ...)
 
 int main(void)
 {
-    int test = 2334;
-    ft_printf("\nMy printf  : %p\n", &test);
-    printf("Real printf: %p\n\n", &test);
+    unsigned int test;
+
+    test = 2342348;
+    printf("\n\nreal printf: %u\n", test);
+    ft_printf("My printf  : %u\n", test);
+
     return (0);
 }

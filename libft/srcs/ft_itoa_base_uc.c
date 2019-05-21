@@ -12,14 +12,6 @@
 
 #include "libft.h"
 
-static	long	int	ft_labs(long int nb)
-{
-	if (nb < 0)
-		return (nb * -1);
-	else
-		return (nb);
-}
-
 static	long	int	ft_find_size(long int value, int base)
 {
 	int i;

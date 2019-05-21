@@ -36,7 +36,7 @@ static size_t	find_length(long int value, long int neg)
 		return (len);
 }
 
-char			*ft_itoa(int n)
+char			*ft_ltoa(long int n)
 {
 	char			*dest;
 	long int		neg;
