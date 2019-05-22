@@ -1,39 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_strdup.c                                        :+:    :+:            */
+/*   ft_cinstr.c                                        :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jdunnink <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/03/20 13:36:10 by jdunnink      #+#    #+#                 */
-/*   Updated: 2019/04/03 11:10:33 by jdunnink      ########   odam.nl         */
+/*   Created: 2019/05/22 11:10:32 by jdunnink      #+#    #+#                 */
+/*   Updated: 2019/05/22 11:10:59 by jdunnink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strdup(const char *s1)
+int ft_cinstr(const char *str, char c)
 {
-	char	*dest;
-	int		i;
-	int		len;
+    size_t i;
 
-	len = 0;
-	while (s1[len] != '\0')
-		len++;
-	dest = (char *)malloc(sizeof(char) * len + 1);
-	if (dest)
-	{
-		i = 0;
-		while (s1[i] != '\0')
-		{
-			dest[i] = s1[i];
-			i++;
-		}
-		dest[i] = '\0';
-		return (dest);
-	}
-	return (0);
+    if (!str)
+        return (0);
+    i = 0;
+    while (str[i] != '\0')
+    {
+        if (str[i] == c)
+            return (1);
+        i++;
+    }
+    return (0);
 }
-
-

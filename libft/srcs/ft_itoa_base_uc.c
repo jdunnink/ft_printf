@@ -37,6 +37,8 @@ char				*ft_itoa_base_uc(int value, int base)
 	char		*dest;
 	char		*tab;
 
+	if (value == 0)
+		return (ft_ctostr('0'));
 	temp = (long int)value;
 	tab = "0123456789ABCDEF";
 	if (base < 2 || base > 16)

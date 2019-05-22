@@ -16,6 +16,7 @@ SRC =	ft_swap.c			\
 		ft_atoi.c			\
 		ft_atol.c			\
 		ft_bzero.c			\
+		ft_cinstr.c			\
 		ft_isalnum.c		\
 		ft_isalpha.c		\
 		ft_isascii.c		\
@@ -48,6 +49,7 @@ SRC =	ft_swap.c			\
 		ft_strdel.c			\
 		ft_strdup.c			\
 		ft_strndup.c		\
+		ft_strdup_exep.c	\
 		ft_strequ.c			\
 		ft_striter.c		\
 		ft_striteri.c		\
