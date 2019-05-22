@@ -86,6 +86,7 @@ char			*ft_strcpy(char *dst, const char *src);
 char			*ft_strdup(const char *s1);
 char			*ft_strndup(char *src, size_t nb);
 char			*ft_strdup_exep(const char *s1, char c);
+char			*ft_strdup_until(const char *s1, char end);
 size_t			ft_strlen(const char *str);
 size_t			ft_strlcat(char *dst, const char *src, size_t size);
 void			ft_strclr(char *s);

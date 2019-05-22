@@ -12,11 +12,9 @@
 
 #include "printf.h"
 
-void flag_override(t_fspec *format)
+static void flag_override(t_fspec *format)
 {
     char *new_flags;
-
-    printf("    flag override is called, current flags: %s\n", format->flags);
 
     if (ft_cinstr(format->flags, '-') == 1 && ft_cinstr(format->flags, '0') == 1)
     {
@@ -32,7 +30,7 @@ void flag_override(t_fspec *format)
     }
 }
 
-void    pad_field_width(char **field, t_fspec inf)
+static void    pad_field_width(char **field, t_fspec inf)
 {
     char *pad_field;
     char *new_field;
@@ -41,7 +39,6 @@ void    pad_field_width(char **field, t_fspec inf)
     pad_len = 0;
     pad_field = NULL;
     pad_len = inf.width - ft_strlen(*field);
-    printf("    The additional padding length: %i\n", pad_len);
     while (pad_len > 0)
     {
         if (pad_field == NULL)
@@ -50,7 +47,6 @@ void    pad_field_width(char **field, t_fspec inf)
             pad_field = ft_strjoin("0", pad_field);
         pad_len--;
     }
-    printf("    A pad field was created: %s\n", pad_field);
     if (ft_cinstr(inf.flags, '0') == 0)
         ft_memset(pad_field, ' ', ft_strlen(pad_field));
     if (ft_cinstr(inf.flags, '-') == 1)
@@ -64,10 +60,9 @@ void    pad_field_width(char **field, t_fspec inf)
     }
     else
         *field = ft_strjoin(pad_field, *field);
-    printf("    pad field was combined with existing field: %s\n", *field);
 }
 
-t_fspec get_formatspec(char **format)
+static t_fspec get_formatspec(char **format)
 {
     char    *spec;
     char    *precision;
@@ -75,7 +70,6 @@ t_fspec get_formatspec(char **format)
     size_t  len;
     t_fspec *inf;
 
-    printf("\nget formatspec is called.\n");
     spec = *format;
     len = 1;
     spec++;
@@ -93,18 +87,11 @@ t_fspec get_formatspec(char **format)
         if (ft_cinstr("#-+0 cspdiouXxfF123456789.", *spec) == 0)
             break;
         if (*spec == '.')
-        {
-            printf("    precision is enabled\n");
             inf->prec_on = 1;
-        }
         if (ft_cinstr("123456789", *spec) == 1 && inf->prec_on == 0)
-        {
-            printf("    field width is enabled\n");
             inf->width_on = 1;
-        }
         if (ft_cinstr("%cspdiouXxfF", *spec) == 1)
         {
-            printf("    Argument type was found: %c\n", *spec);
             inf->format = *spec;
             inf->len = len;
             if (inf->prec_on == 1 && precision != 0)
@@ -123,7 +110,6 @@ t_fspec get_formatspec(char **format)
         }
         if (ft_cinstr("#-+0 ", *spec) == 1 && inf->width_on == 0 && inf->prec_on == 0)
         {
-            printf("    A flag character was found: %c\n", *spec);
             if (inf->flags == NULL)
                 inf->flags = ft_ctostr(*spec);
             else
@@ -134,31 +120,17 @@ t_fspec get_formatspec(char **format)
         }
         if (inf->prec_on == 1 && ft_cinstr("0123456789", *spec) == 1)
         {
-            printf("    additional precision digit found\n");
             if (precision == NULL)
-            {
-                printf("    precision does not exist yet --> creating instance\n");
                 precision = ft_ctostr(*spec);
-            }
             else
-            {
-                printf("    precisionexists --> joining to existing width\n");
                 precision = ft_strjoin(precision, ft_ctostr(*spec));
-            }
         }
         if (inf->prec_on == 0 && ft_cinstr("0123456789", *spec) == 1 && inf->width_on == 1)
         {
-            printf("    additional width digit found\n");
             if (width == NULL)
-            {
-                printf("    width does not exist yet --> creating instance\n");
                 width = ft_ctostr(*spec);
-            }
             else
-            {
-                printf("    width exists --> joining to existing width\n");
                 width = ft_strjoin(width, ft_ctostr(*spec));
-            }
         }
         len++;
         spec++;
@@ -168,62 +140,41 @@ t_fspec get_formatspec(char **format)
     return (*inf);
 }
 
-int format_disp(char **tmp, t_fspec inf, va_list a_list)
+static int format_disp(char **tmp, t_fspec inf, va_list a_list)
 {
     char type;
-    
-    printf("\nformat disp is called.\n");
 
     type = inf.format;
     if (type == 'c')
-    {
-        printf("    The argument has type char\n");
         *tmp = ft_ctostr((char)va_arg(a_list, int));
-    }
     else if (type == 's')
-    {
-        printf("    The argument has type string\n");
         *tmp = ft_strdup((char *)va_arg(a_list, char *));
-    }
     else if (type == 'i' || type == 'd')
     {
-         printf("    The argument has type int\n");
         *tmp = ft_itoa_base((int)va_arg(a_list, int), 10);
         if (ft_cinstr(inf.flags, '+') == 1 && **tmp != '-')
             *tmp = ft_strjoin("+", *tmp);
     }
     else if (type == 'u')
-    {
-        printf("    The argument has type unsigned int\n");
         *tmp = ft_uitoa((unsigned int)va_arg(a_list, unsigned int));
-    }
     else if (type == '%')
-    {
-        printf("    The argument is a redundant percentage\n");
         *tmp = ft_ctostr(type);
-    }
     else if (type == 'p')
-    {
-        printf("    The argument is a pointer 'p'\n");
         *tmp = ft_strjoin("0x7fff", ft_itoa_base(va_arg(a_list, int), 16));
-    }
     else if (type == 'x')
     {
-        printf("    The argument is a lowercase hexadecimal\n");
         *tmp = ft_itoa_base(va_arg(a_list, int), 16);
         if (**tmp != '0' && ft_cinstr(inf.flags, '#') == 1)
             *tmp = ft_strjoin("0x", *tmp);
     }
     else if (type == 'X')
     {
-        printf("    The argument is a uppercase hexadecimal\n");
         *tmp = ft_itoa_base_uc(va_arg(a_list, int), 16);
         if (**tmp != '0' && ft_cinstr(inf.flags, '#') == 1)
             *tmp = ft_strjoin("0X", *tmp);
     }
     else if (type == 'o')
     {
-        printf("    The argument is an octal\n");
         if (ft_cinstr(inf.flags, '#') == 1)
             *tmp = ft_strjoin("0", ft_itoa_base(va_arg(a_list, int), 8));
         else
@@ -231,7 +182,6 @@ int format_disp(char **tmp, t_fspec inf, va_list a_list)
     }
     else if (type == 'f' || type == 'F')
     {
-        printf("    The argument is a float\n");
         if (inf.prec_on == 0 && inf.precis == 0)
             inf.precis = 6;
         *tmp = ft_dtoa((double)va_arg(a_list, double), inf.precis);
@@ -241,10 +191,7 @@ int format_disp(char **tmp, t_fspec inf, va_list a_list)
             *tmp = ft_strdup_until(*tmp, '.');
     }
     else
-    {
-        ft_putendl("ERROR: format specifier not recognized");
         return (-1);
-    }
     if (inf.width_on == 1 && ft_cinstr("di", inf.format) == 1)
         pad_field_width(tmp, inf);
     return (1);
@@ -265,16 +212,6 @@ int ft_printf(const char * restrict format, ...)
         if (*format == '%')
         {
             inf = get_formatspec((char**)&format);
-            printf("\nget formetspec DONE:\n");    
-            printf("    applicable flags: %s\n", inf.flags);
-            printf("    argument type: %c\n", inf.format);
-            printf("    spec length: %lu\n", inf.len);
-            printf("    precision: %u\n", inf.precis);
-            printf("    field width: %u\n", inf.width);
-            if(inf.width_on == 1)
-                ft_putendl("    field width is enabled");
-            if(inf.prec_on == 1)
-                ft_putendl("    precision is enabled");
             if (inf.format == 0)
                 return (2);
             if(format_disp(&tmp, inf, a_list) == -1)
@@ -290,21 +227,5 @@ int ft_printf(const char * restrict format, ...)
     ft_putstr(dest);
     free(dest);
     va_end (a_list);
-    return (0);
-}
-
-int main(void)
-{
-    unsigned int test;
-    int res;
-
-    test = 233434242;
-    res = ft_printf("\n\nMy printf  :%#x\n", test);
-    if (res == 2)
-        ft_putendl("\nerror: not a valid format specifier\n");
-    else if (res == 1)
-        ft_putendl("\nerror: FS was valid, but error occurred while accessing arguments\n");
-    printf("real printf:%#x\n\n\n", test);
-
     return (0);
 }

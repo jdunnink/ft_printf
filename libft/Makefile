@@ -50,6 +50,7 @@ SRC =	ft_swap.c			\
 		ft_strdup.c			\
 		ft_strndup.c		\
 		ft_strdup_exep.c	\
+		ft_strdup_until.c	\
 		ft_strequ.c			\
 		ft_striter.c		\
 		ft_striteri.c		\
