@@ -12,7 +12,7 @@
 
 NAME = test
 
-SRC =	main.c	
+SRC =	test_main.c	
 
 OBJ = $(SRC:.c=.o)
 SRCDIR = srcs
@@ -21,10 +21,10 @@ OBJDIR = objs
 SRCS = $(addprefix $(SRCDIR)/, $(SRC))
 OBJS = $(addprefix $(OBJDIR)/, $(OBJ))
 
-HEADER = -I includes/ -I libft/includes/
+HEADER = -I includes/ -I libftprintf/includes/
 cc = gcc
 CFLAGS = -Wall -Wextra -Werror
-LIB = -L libft/ -lft
+LIB = -L libftprintf/ -lftprintf
 
 .PHONY: all clean fclean re
 .SUFFIXES: .c .o
@@ -32,7 +32,7 @@ LIB = -L libft/ -lft
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	make -C libft/ 
+	make -C libftprintf/ 
 	$(CC) -o $(NAME) $(CFLAGS) $(OBJS) $(HEADER) $(LIB)
 
 $(OBJS): $(SRCS)
@@ -43,10 +43,10 @@ $(OBJS): $(SRCS)
 clean:
 	/bin/rm -Rf $(OBJDIR)
 	/bin/rm -Rf *~ *#
-	make -C libft/ clean
+	make -C libftprintf/ clean
 
 fclean: clean
-	make -C libft/ fclean
+	make -C libftprintf/ fclean
 	/bin/rm -f $(NAME)
 
 re: fclean all
