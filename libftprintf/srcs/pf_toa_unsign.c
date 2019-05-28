@@ -12,44 +12,52 @@
 
 #include "printf.h"
 
-static	int	find_size(long long value)
+static int  adjust_typesize(unsigned long long *value, int typesize)
+{
+    if (typesize == -2)
+        *value = (unsigned char)*value;
+    else if (typesize == -1)
+        *value = (unsigned short)*value;
+    else if (typesize == 0)
+        *value = (unsigned int)*value;
+    else if (typesize == 1)
+        *value = (unsigned long)*value;
+    return (typesize);
+}
+
+static	int	find_size(unsigned long long value, int base)
 {
 	int i;
-	int neg;
 
 	i = 0;
 	while (value > 0)
 	{
-		value /= 10;
+		value /= base;
 		i++;
 	}
 	return (i);
 }
 
-char				*pf_idtoa(long long value, int type_size)
+char				*pf_toa_unsign(unsigned long long value, int base, int type_size, int alphacase)
 {
 	int			len;
-	long long int	temp;
 	char		*dest;
 	char		*tab;
 
-	if (type_size == -2)
-		temp = (char)value;
-	else if (type_size == -1)
-		temp = (short)value;
-	else if (type_size == 0)
-		temp = (int)value;
-	else if (type_size == 1)
-		temp = (long)value;
-	else if (type_size == 2)
-		temp = value;
-	len = ft_find_size(temp);
+    type_size = adjust_typesize(&value, type_size);
+    if (alphacase == 2)
+	    tab = "0123456789ABCDEF";
+    else
+        tab = "0123456789abcdef";
+	if (base < 2 || base > 16)
+		return (NULL);
+	len = find_size(value, base);
 	dest = ft_strnew(len);
 	while (len)
 	{
 		len--;
-		dest[len] = temp % 10 + '0';
-		temp /= 10;
+		dest[len] = tab[(value % base)];
+		value /= base;
 	}
 	return (dest);
 }

@@ -16,7 +16,6 @@ SRC =	ft_atoi.c			\
 		ft_ctostr.c			\
 		ft_itoa_base.c		\
 		ft_utoa_base.c		\
-		ft_lutoa_base.c		\
 		ft_ptoa.c			\
 		ft_labs.c			\
 		ft_memset.c			\
@@ -25,6 +24,7 @@ SRC =	ft_atoi.c			\
 		ft_strcat.c			\
 		ft_strcpy.c			\
 		ft_strdup_exep.c	\
+		ft_strdup_until.c	\
 		ft_strjoin.c		\
 		ft_strlen.c			\
 		ft_strdup.c			\
@@ -35,6 +35,14 @@ SRC =	ft_atoi.c			\
 		pf_flag_override.c	\
 		pf_get_specinfo.c	\
 		pf_handle_csp.c		\
+		pf_handle_idu.c		\
+		pf_handle_xX.c		\
+		pf_handle_fF.c		\
+		pf_toa_sign.c		\
+		pf_toa_unsign.c		\
+		pf_dtoa.c			\
+		pf_ltoa.c			\
+		pf_add_pad.c		\
 
 OBJ = $(SRC:.c=.o)
 

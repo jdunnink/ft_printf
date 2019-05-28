@@ -6,7 +6,7 @@ static char *remove_dup(char *str)
     int i;
     char *dest;
 
-    printf("pf_remove_dup is called.\n");
+    printf("    pf_remove_dup is called.\n");
 
     if (!str)
         return (0);

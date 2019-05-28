@@ -4,10 +4,7 @@
 
 int main(void)
 {
-    char    test_char;
-    char    *test_string;
-    char    *test_pointer;
-    short int     test_int;
+    double  test;
 
     int res;
     int real_res;
@@ -15,15 +12,13 @@ int main(void)
     res = 0;
     real_res = 0;
 
-    test_char = 't';
-    test_string = "testing testing";
-    test_pointer = test_string;
-    test_int = 3456;
+    test = -2938;
 
-    res = ft_printf("MYpointer:%i\n", test_int);
-    real_res = printf("RLpointer:%i\n", test_int);
+    res = ft_printf("%-#10.0f\n", test);
+    real_res = printf("%-#10.0f\n", test);
 
     printf("my printf returns   : %i\n", res);
     printf("real printf returns : %i\n\n\n", real_res);
     return (0);
 }
+

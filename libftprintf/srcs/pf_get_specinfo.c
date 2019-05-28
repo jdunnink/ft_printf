@@ -49,6 +49,8 @@ static  void    parse_typesize(t_spec *info)
         return ;
     while (flags[i] != '\0')
     {
+        if (info->type_size != 0)
+            break;
         if (flags[i] == 'h' && flags[i + 1] == 'h')
             info->type_size = -2;
         else if ((flags[i] == 'l' && flags[i + 1] == 'l' )|| flags[i] == 'L')
@@ -89,9 +91,14 @@ t_spec  pf_get_specinfo(char *format)
             info->width_on = 1;
         }
         field_specs(format, info, &precision, &width);
-        if (ft_cinstr("#-+0 lLh", *format) == 1 && info->width_on == 0 && info->prec_on == 0)
+        if (ft_cinstr("#-+ lLh", *format) == 1)
         {
-            printf("    A flag characted was found.\n");
+            printf("    A flag characted was found: %c\n", *format);
+            info->flags = ft_stradd(info->flags, ft_ctostr(*format));
+        }
+        if (*format == '0' && info->width_on == 0 && info->prec_on == 0)
+        {
+            printf("    A flag characted was found: %c\n", *format);
             info->flags = ft_stradd(info->flags, ft_ctostr(*format));
         }
         if (ft_cinstr("%cspdiouXxfF", *format) == 1)
