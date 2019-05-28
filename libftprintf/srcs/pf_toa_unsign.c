@@ -1,31 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   main.c                                             :+:    :+:            */
+/*   pf_toa_unsign.c                                    :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jdunnink <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/03/28 11:43:59 by jdunnink      #+#    #+#                 */
-/*   Updated: 2019/04/03 11:04:48 by jdunnink      ########   odam.nl         */
+/*   Created: 2019/05/28 18:45:37 by jdunnink      #+#    #+#                 */
+/*   Updated: 2019/05/28 18:47:07 by jdunnink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "printf.h"
 
-static int  adjust_typesize(unsigned long long *value, int typesize)
+static int	adjust_typesize(unsigned long long *value, int typesize)
 {
-    if (typesize == -2)
-        *value = (unsigned char)*value;
-    else if (typesize == -1)
-        *value = (unsigned short)*value;
-    else if (typesize == 0)
-        *value = (unsigned int)*value;
-    else if (typesize == 1)
-        *value = (unsigned long)*value;
-    return (typesize);
+	if (typesize == -2)
+		*value = (unsigned char)*value;
+	else if (typesize == -1)
+		*value = (unsigned short)*value;
+	else if (typesize == 0)
+		*value = (unsigned int)*value;
+	else if (typesize == 1)
+		*value = (unsigned long)*value;
+	return (typesize);
 }
 
-static	int	find_size(unsigned long long value, int base)
+static int	find_size(unsigned long long value, int base)
 {
 	int i;
 
@@ -38,17 +38,17 @@ static	int	find_size(unsigned long long value, int base)
 	return (i);
 }
 
-char				*pf_toa_unsign(unsigned long long value, int base, int type_size, int alphacase)
+char		*pf_toa_unsign(unsigned long long value, int base, int type_size, int alphacase)
 {
 	int			len;
 	char		*dest;
 	char		*tab;
 
-    type_size = adjust_typesize(&value, type_size);
-    if (alphacase == 2)
-	    tab = "0123456789ABCDEF";
-    else
-        tab = "0123456789abcdef";
+	type_size = adjust_typesize(&value, type_size);
+	if (alphacase == 2)
+		tab = "0123456789ABCDEF";
+	else
+		tab = "0123456789abcdef";
 	if (base < 2 || base > 16)
 		return (NULL);
 	len = find_size(value, base);

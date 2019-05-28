@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   main.c                                             :+:    :+:            */
+/*   pf_toa_sign.c                                      :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jdunnink <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/03/28 11:43:59 by jdunnink      #+#    #+#                 */
-/*   Updated: 2019/04/03 11:04:48 by jdunnink      ########   odam.nl         */
+/*   Created: 2019/05/28 18:42:51 by jdunnink      #+#    #+#                 */
+/*   Updated: 2019/05/28 18:44:54 by jdunnink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "printf.h"
 
-static long long   ft_llabs(long long nb)
+static long long	ft_llabs(long long nb)
 {
 	if (nb < 0)
 		return (nb * -1);
@@ -20,20 +20,20 @@ static long long   ft_llabs(long long nb)
 		return (nb);
 }
 
-static int  adjust_typesize(long long *value, int typesize)
+static int			adjust_typesize(long long *value, int typesize)
 {
-    if (typesize == -2)
-        *value = (char)*value;
-    else if (typesize == -1)
-        *value = (short)*value;
-    else if (typesize == 0)
-        *value = (int)*value;
-    else if (typesize == 1)
-        *value = (long)*value;
-    return (typesize);
+	if (typesize == -2)
+		*value = (char)*value;
+	else if (typesize == -1)
+		*value = (short)*value;
+	else if (typesize == 0)
+		*value = (int)*value;
+	else if (typesize == 1)
+		*value = (long)*value;
+	return (typesize);
 }
 
-static	int	find_size(long long value, int base)
+static	int			find_size(long long value, int base)
 {
 	int i;
 	int neg;
@@ -58,14 +58,14 @@ char				*pf_toa_sign(long long value, int base, int type_size, int alphacase)
 	char		*dest;
 	char		*tab;
 
-    type_size = adjust_typesize(&value, type_size);
+	type_size = adjust_typesize(&value, type_size);
 	temp = (long long)value;
-    if (temp == -9223372036854775807)
-        return ("-9223372036854775807");
-    if (alphacase == 2)
-	    tab = "0123456789ABCDEF";
-    else
-        tab = "0123456789abcdef";
+	if (temp == -9223372036854775807)
+		return ("-9223372036854775807");
+	if (alphacase == 2)
+		tab = "0123456789ABCDEF";
+	else
+		tab = "0123456789abcdef";
 	if (base < 2 || base > 16)
 		return (NULL);
 	len = find_size(temp, base);

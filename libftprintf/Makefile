@@ -6,7 +6,7 @@
 #    By: jdunnink <marvin@codam.nl>                   +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/03/20 09:33:47 by jdunnink      #+#    #+#                  #
-#    Updated: 2019/05/04 14:33:06 by jdunnink      ########   odam.nl          #
+#    Updated: 2019/05/28 18:40:21 by jdunnink      ########   odam.nl          #
 #                                                                              #
 #******************************************************************************#
 
@@ -36,8 +36,8 @@ SRC =	ft_atoi.c			\
 		pf_get_specinfo.c	\
 		pf_handle_csp.c		\
 		pf_handle_idu.c		\
-		pf_handle_xX.c		\
-		pf_handle_fF.c		\
+		pf_handle_x.c		\
+		pf_handle_f.c		\
 		pf_toa_sign.c		\
 		pf_toa_unsign.c		\
 		pf_dtoa.c			\

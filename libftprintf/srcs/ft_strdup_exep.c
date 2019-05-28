@@ -6,7 +6,7 @@
 /*   By: jdunnink <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/22 11:06:08 by jdunnink      #+#    #+#                 */
-/*   Updated: 2019/05/22 11:06:10 by jdunnink      ########   odam.nl         */
+/*   Updated: 2019/05/28 17:59:12 by jdunnink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,13 @@ char	*ft_strdup_exep(const char *s1, char c)
 
 	len = 0;
 	tmp = (char *)s1;
-	while(*tmp != '\0')
+	while (*tmp != '\0')
 	{
 		if (*tmp != c)
 			len++;
 		tmp++;
 	}
-	dest = (char *)malloc(sizeof(char) * len + 1);
-	if (!dest)
-		return (0);
-	dest[len] = '\0';
+	dest = ft_strnew(len);
 	tmp = dest;
 	while (*s1 != '\0')
 	{

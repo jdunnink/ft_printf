@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_printf.c                                        :+:    :+:            */
+/*   pf_ltoa.c                                          :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jdunnink <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/05/27 07:38:44 by jdunnink      #+#    #+#                 */
-/*   Updated: 2019/05/27 07:38:45 by jdunnink      ########   odam.nl         */
+/*   Created: 2019/05/28 18:41:44 by jdunnink      #+#    #+#                 */
+/*   Updated: 2019/05/28 18:42:20 by jdunnink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "printf.h"
 
-static	long int		is_negative(long int *n)
+static	long int	is_negative(long int *n)
 {
 	if (*n < 0)
 	{
@@ -23,7 +23,7 @@ static	long int		is_negative(long int *n)
 		return (0);
 }
 
-static size_t	find_length(long int value, long int neg)
+static size_t		find_length(long int value, long int neg)
 {
 	size_t len;
 
@@ -36,7 +36,7 @@ static size_t	find_length(long int value, long int neg)
 		return (len);
 }
 
-char			*pf_ltoa(long int n)
+char				*pf_ltoa(long int n)
 {
 	char			*dest;
 	long int		neg;

@@ -26,8 +26,8 @@ void        pf_flag_override(t_spec *format);           // handles flag preceden
 t_spec      pf_get_specinfo(char *format);              // parses the format string and interprents the format specifiers
 int         pf_handle_csp(char **arg, t_spec info, va_list a_list); // handle csp and % formats
 int         pf_handle_idu(char **tmp, t_spec info, va_list a_list); // handle idu formats
-int         pf_handle_xX(char **tmp, t_spec info, va_list a_list);  // handle xX formats
-int         pf_handle_fF(char **tmp, t_spec info, va_list a_list);  // handle fF formats
+int         pf_handle_x(char **tmp, t_spec info, va_list a_list);  // handle xX formats
+int         pf_handle_f(char **tmp, t_spec info, va_list a_list);  // handle fF formats
 char        *pf_add_pad(size_t len, char c);             // creates a padding field filled with c, up to len bytes.
 
 char        *ft_strndup(char *src, size_t nb);          // creates a duplicate string, with up to n bytes of src.
