@@ -12,34 +12,27 @@
 
 #include "printf.h"
 
-char	*pf_dtoa(double value, int precision)
+char	*pf_dtoa(long double value, int precision)
 {
 	char	*dest;
 	char	*tmp;
 	char	*next;
 	int		count;
 
+	printf("	pf_toa is called with: %Lf and precision: %i\n", value, precision);	
 	tmp = pf_ltoa((long)value);
-	dest = ft_strjoin(tmp, ".");
-	free(tmp);
+	dest = ft_strjoin_free(tmp, ".", 1);
 	count = 0;
 	value = value - (long)value;
 	if (value < 0)
 		value = value * -1;
 	while (precision > 0)
 	{
-		count++;
 		value = value * 10;
-		if (count == 1)
-		{
-			count = 0;
-			tmp = pf_ltoa((long)value);
-			value = value - (long)value;
-			next = ft_strjoin(dest, tmp);
-			free(dest);
-			free(tmp);
-			dest = next;
-		}
+		tmp = pf_ltoa((long)value);
+		value = value - (long)value;
+		next = ft_strjoin_free(dest, tmp, 3);
+		dest = next;
 		precision--;
 	}
 	return (dest);

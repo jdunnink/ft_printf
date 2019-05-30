@@ -56,6 +56,8 @@ static	void	parse_typesize(t_spec *info)
 
 	i = 0;
 	flags = info->flags;
+	if (info->type == 'U')
+		info->type_size = 1;
 	if (flags == 0)
 		return ;
 	while (flags[i] != '\0')
@@ -70,22 +72,25 @@ static	void	parse_typesize(t_spec *info)
 			info->type_size = -1;
 		else if (flags[i] == 'l')
 			info->type_size = 1;
+		else if (flags[i] == 'j')
+			info->type_size = 3;
+		else if (flags[i] == 'z')
+			info->type_size = 1;
 		i++;
 	}
 }
 
-t_spec			pf_get_specinfo(char *format)
+t_spec			*pf_get_specinfo(char *format, t_spec *info)
 {
 	char	*precision;
 	char	*width;
-	t_spec	*info;
 
 	printf("\nget specinfo is called with: %s\n", format);
 	init_specs(&info, &precision, &width);
 	format++;
 	while (*format != '\0')
 	{
-		if (ft_cinstr("#-+0 lLh.123456789%cspdiouxXfF", *format) == 0)
+		if (ft_cinstr("#-+0 lLh.123456789%jcspdiouUxXfFz", *format) == 0)
 		{
 			printf("    unrecognized character found --> break parsing\n");
 			break ;
@@ -101,7 +106,7 @@ t_spec			pf_get_specinfo(char *format)
 			info->width_on = 1;
 		}
 		field_specs(format, info, &precision, &width);
-		if (ft_cinstr("#-+ lLh", *format) == 1)
+		if (ft_cinstr("#-+ lLhjz", *format) == 1)
 		{
 			printf("    A flag characted was found: %c\n", *format);
 			info->flags = ft_stradd(info->flags, ft_ctostr(*format));
@@ -111,16 +116,16 @@ t_spec			pf_get_specinfo(char *format)
 			printf("    A flag characted was found: %c\n", *format);
 			info->flags = ft_stradd(info->flags, ft_ctostr(*format));
 		}
-		if (ft_cinstr("%cspdiouXxfF", *format) == 1)
+		if (ft_cinstr("%cspdiouUXxfF", *format) == 1)
 		{
-			parse_typesize(info);
 			printf("    format type was found --> break parsing.\n");
 			load_fields(info, precision, width);
 			info->type = *format;
-			return (*info);
+			parse_typesize(info);
+			return (info);
 		}
 		info->spec_len++;
 		format++;
 	}
-	return (*info);
+	return (info);
 }

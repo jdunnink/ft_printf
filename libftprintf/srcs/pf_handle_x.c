@@ -21,9 +21,7 @@ static	char	*add_prefix(char *arg, char type)
 		prefix = ft_strdup("0X");
 	else
 		prefix = ft_strdup("0x");
-	dest = ft_strjoin(prefix, arg);
-	free(arg);
-	free(prefix);
+	dest = ft_strjoin_free(prefix, arg, 3);
 	return (dest);
 }
 
@@ -34,18 +32,16 @@ static	char	*pf_x_width(char *arg, int pad_size, char *flags)
 
 	pad = pf_add_pad(pad_size, ' ');
 	if (ft_cinstr(flags, '-') == 1)
-		dest = ft_strjoin(arg, pad);
+		dest = ft_strjoin_free(arg, pad, 3);
 	else
-		dest = ft_strjoin(pad, arg);
-	free(pad);
-	free(arg);
+		dest = ft_strjoin_free(pad, arg, 3);
 	return (dest);
 }
 
 static	char	*pf_x_precis(char *arg, int precis)
 {
-	size_t	arg_len;
-	size_t	pad_len;
+	int		arg_len;
+	int		pad_len;
 	char	*padding;
 	char	*dest;
 
@@ -54,25 +50,36 @@ static	char	*pf_x_precis(char *arg, int precis)
 		return (arg);
 	pad_len = precis - arg_len;
 	padding = pf_add_pad(pad_len, '0');
-	dest = ft_strjoin(padding, arg);
-	free(arg);
+	dest = ft_strjoin_free(padding, arg, 3);
 	return (dest);
 }
 
 int				pf_handle_x(char **tmp, t_spec info, va_list a_list)
 {
-	if (info.type == 'x')
-		*tmp = pf_toa_unsign((unsigned long long)va_arg(a_list, unsigned long long), 16, info.type_size, 1);
+	unsigned long long res;
+
+	res = (unsigned long long)va_arg(a_list, unsigned long long);
+	if (res == 0)
+		*tmp = ft_ctostr('0');
+	else if (info.type == 'x')
+		*tmp = pf_toa_unsign(res, 16, info.type_size, 1);
 	else if (info.type == 'X')
-		*tmp = pf_toa_unsign((unsigned long long)va_arg(a_list, unsigned long long), 16, info.type_size, 2);
-	else
-		return (-1);
+		*tmp = pf_toa_unsign(res, 16, info.type_size, 2);
+	if (*tmp == 0)
+		*tmp = ft_ctostr('0');
 	if (info.prec_on == 1)
 		*tmp = pf_x_precis(*tmp, info.precis);
 	else if (info.width_on == 1 && ft_cinstr(info.flags, '0') == 1)
-		*tmp = pf_x_precis(*tmp, info.width);
-	if (ft_cinstr(info.flags, '#') == 1)
+	{
+		if (ft_cinstr(info.flags, '#') == 1)
+			*tmp = pf_x_precis(*tmp, info.width - 2);
+		else
+			*tmp = pf_x_precis(*tmp, info.width);
+	}
+	if (ft_cinstr(info.flags, '#') == 1 && res != 0)
 		*tmp = add_prefix(*tmp, info.type);
+	if (info.prec_on == 1 && info.precis == 0 && **tmp == '0')
+		*tmp = ft_strdup_exep(*tmp, '0');
 	if (info.width_on == 1 && info.width > ft_strlen(*tmp))
 		*tmp = pf_x_width(*tmp, info.width - ft_strlen(*tmp), info.flags);
 	return (1);

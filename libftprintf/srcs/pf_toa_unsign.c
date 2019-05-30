@@ -38,12 +38,21 @@ static int	find_size(unsigned long long value, int base)
 	return (i);
 }
 
+static int check_boundaries(unsigned long long value, int type_size)
+{
+	if (value > 4294967295 && type_size <= 0)
+		return (0);
+	return (1);
+}
+
 char		*pf_toa_unsign(unsigned long long value, int base, int type_size, int alphacase)
 {
 	int			len;
 	char		*dest;
 	char		*tab;
 
+	if(check_boundaries(value, type_size) == 0)
+		return (ft_ctostr('0'));
 	type_size = adjust_typesize(&value, type_size);
 	if (alphacase == 2)
 		tab = "0123456789ABCDEF";

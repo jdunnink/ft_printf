@@ -16,8 +16,8 @@ static	char	*pf_csp_width(char *arg, int width_on, int width, char *flags)
 {
 	char	*padding;
 	char	*dest;
-	size_t	ob_len;
-	size_t	pad_len;
+	int	ob_len;
+	int	pad_len;
 
 	ob_len = ft_strlen(arg);
 	if (width_on == 0 || width < ob_len)
@@ -41,7 +41,7 @@ static	char	*pf_s_precis(char *arg, int prec_on, int precision)
 {
 	char *dest;
 
-	if (prec_on == 0 || precision > ft_strlen(arg))
+	if (prec_on == 0 || precision > (int)ft_strlen(arg))
 		return (arg);
 	dest = ft_strndup(arg, precision);
 	free(arg);
@@ -50,11 +50,26 @@ static	char	*pf_s_precis(char *arg, int prec_on, int precision)
 
 int				pf_handle_csp(char **arg, t_spec info, va_list a_list)
 {
+	char *tmp;
+	int ret;
+
+	ret = 1;
 	if (info.type == 'c')
+	{
 		*arg = ft_ctostr((char)va_arg(a_list, int));
+		if (**arg == '\0')
+		{
+			info.width--;
+			ret = -3;
+		}
+	}
 	else if (info.type == 's')
 	{
-		*arg = ft_strdup((char *)va_arg(a_list, char *));
+		tmp = (char *)va_arg(a_list, char *);
+		if (tmp == 0 || tmp == NULL)
+			*arg = ft_strdup("(null)");
+		else
+			*arg = ft_strdup(tmp);
 		*arg = pf_s_precis(*arg, info.prec_on, info.precis);
 	}
 	else if (info.type == 'p')
@@ -64,5 +79,5 @@ int				pf_handle_csp(char **arg, t_spec info, va_list a_list)
 	else
 		return (-1);
 	*arg = pf_csp_width(*arg, info.width_on, info.width, info.flags);
-	return (1);
+	return (ret);
 }

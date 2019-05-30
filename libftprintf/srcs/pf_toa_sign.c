@@ -12,7 +12,7 @@
 
 #include "printf.h"
 
-static long long	ft_llabs(long long nb)
+static intmax_t	ft_maxabs(intmax_t nb)
 {
 	if (nb < 0)
 		return (nb * -1);
@@ -20,7 +20,7 @@ static long long	ft_llabs(long long nb)
 		return (nb);
 }
 
-static int			adjust_typesize(long long *value, int typesize)
+static int			adjust_typesize(intmax_t *value, int typesize)
 {
 	if (typesize == -2)
 		*value = (char)*value;
@@ -30,10 +30,12 @@ static int			adjust_typesize(long long *value, int typesize)
 		*value = (int)*value;
 	else if (typesize == 1)
 		*value = (long)*value;
+	else if (typesize == 2)
+		*value = (long long)*value;
 	return (typesize);
 }
 
-static	int			find_size(long long value, int base)
+static	int			find_size(intmax_t value, int base)
 {
 	int i;
 	int neg;
@@ -42,7 +44,7 @@ static	int			find_size(long long value, int base)
 	neg = 0;
 	if (value < 0 && base == 10)
 		neg = 1;
-	value = ft_labs(value);
+	value = ft_maxabs(value);
 	while (value > 0)
 	{
 		value /= base;
@@ -51,17 +53,17 @@ static	int			find_size(long long value, int base)
 	return (i + neg);
 }
 
-char				*pf_toa_sign(long long value, int base, int type_size, int alphacase)
+char				*pf_toa_sign(intmax_t value, int base, int type_size, int alphacase)
 {
 	int			len;
-	long long	temp;
+	intmax_t	temp;
 	char		*dest;
 	char		*tab;
 
 	type_size = adjust_typesize(&value, type_size);
-	temp = (long long)value;
-	if (temp == -9223372036854775807)
-		return ("-9223372036854775807");
+	temp = (intmax_t)value;
+	if (temp < -9223372036854775807)
+		return ("-9223372036854775808");
 	if (alphacase == 2)
 		tab = "0123456789ABCDEF";
 	else
@@ -69,7 +71,7 @@ char				*pf_toa_sign(long long value, int base, int type_size, int alphacase)
 	if (base < 2 || base > 16)
 		return (NULL);
 	len = find_size(temp, base);
-	temp = ft_llabs(temp);
+	temp = ft_maxabs(temp);
 	dest = ft_strnew(len);
 	while (len)
 	{

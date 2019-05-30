@@ -12,6 +12,22 @@
 
 #include "printf.h"
 
+static size_t	count_digits(char *str)
+{
+	size_t digits;
+	size_t i;
+
+	digits = 0;
+	i = 0;
+	while (str[i] != '\0')
+	{
+		if (str[i] <= '9' && str[i] >= '0')
+			digits++;
+		i++;
+	}
+	return (digits);
+}
+
 static	char	*pf_idu_width(char *arg, int pad_size, char *flags)
 {
 	char	*pad;
@@ -19,24 +35,25 @@ static	char	*pf_idu_width(char *arg, int pad_size, char *flags)
 
 	pad = pf_add_pad(pad_size, ' ');
 	if (ft_cinstr(flags, '-') == 1)
-		dest = ft_strjoin(arg, pad);
+		dest = ft_strjoin_free(arg, pad, 3);
 	else
-		dest = ft_strjoin(pad, arg);
-	free(pad);
-	free(arg);
+		dest = ft_strjoin_free(pad, arg, 3);
 	return (dest);
 }
 
-static	char	*pf_idu_precis(char *arg, int precis)
+static	char	*pf_idu_precis(char *arg, int precis, int mode)
 {
-	size_t	arg_len;
-	size_t	pad_len;
+	int		arg_len;
+	int		pad_len;
 	char	*padding;
 	char	*ptr;
 	char	*sign;
 
 	sign = 0;
-	arg_len = ft_strlen(arg);
+	if (mode == 2)
+		arg_len = count_digits(arg);
+	else
+		arg_len = ft_strlen(arg);
 	if (precis <= arg_len)
 		return (arg);
 	ptr = arg;
@@ -44,7 +61,6 @@ static	char	*pf_idu_precis(char *arg, int precis)
 	{
 		ptr++;
 		sign = ft_strndup(arg, 1);
-		arg_len--;
 	}
 	pad_len = precis - arg_len;
 	padding = pf_add_pad(pad_len, '0');
@@ -52,9 +68,7 @@ static	char	*pf_idu_precis(char *arg, int precis)
 	free(arg);
 	if (sign != 0)
 	{
-		arg = ft_strjoin(sign, ptr);
-		free(ptr);
-		free(sign);
+		arg = ft_strjoin_free(sign, ptr, 3);
 		return (arg);
 	}
 	return (ptr);
@@ -62,33 +76,25 @@ static	char	*pf_idu_precis(char *arg, int precis)
 
 int				pf_handle_idu(char **tmp, t_spec info, va_list a_list)
 {
-	char *new_tmp;
-
 	if (ft_cinstr("id", info.type) == 1)
-		*tmp = pf_toa_sign(va_arg(a_list, long long), 10, info.type_size, 1);
-	else if (info.type == 'u')
-		*tmp = pf_toa_unsign(va_arg(a_list, long long), 10, info.type_size, 1);
-	else
-		return (-1);
+		*tmp = pf_toa_sign(va_arg(a_list, intmax_t), 10, info.type_size, 1);
+	else if (ft_cinstr("uU", info.type) == 1)
+		*tmp = pf_toa_unsign(va_arg(a_list, unsigned long long), 10, info.type_size, 1);
+	if (**tmp == '\0')
+		*tmp = ft_ctostr('0');
 	if (ft_cinstr(info.flags, '+') == 1 && **tmp != '-' && info.type != 'u')
-	{
-		new_tmp = ft_strjoin("+", *tmp);
-		free(*tmp);
-		*tmp = new_tmp;
-	}
+		*tmp = ft_strjoin_free("+", *tmp, 2);
 	if (info.prec_on == 1)
-		*tmp = pf_idu_precis(*tmp, info.precis);
-	else if (info.width_on == 1 && ft_cinstr(info.flags, '0') == 1 && info.type != 'u')
-		*tmp = pf_idu_precis(*tmp, info.width - 1);
-	else if (info.width_on == 1 && ft_cinstr(info.flags, '0') == 1 && info.type == 'u')
-		*tmp = pf_idu_precis(*tmp, info.width);
+		*tmp = pf_idu_precis(*tmp, info.precis, 2);
+	else if (info.width_on == 1 && ft_cinstr(info.flags, '0') == 1)
+		*tmp = pf_idu_precis(*tmp, info.width, 1);
+	if (info.prec_on == 1 && info.precis == 0 && **tmp == '0')
+		*tmp = ft_strdup_exep(*tmp, '0');
 	if (info.width_on == 1 && info.width > ft_strlen(*tmp))
 		*tmp = pf_idu_width(*tmp, info.width - ft_strlen(*tmp), info.flags);
-	if (ft_cinstr(info.flags, ' ') == 1 && **tmp != ' ')
+	if (ft_cinstr(info.flags, ' ') == 1 && **tmp != ' ' && **tmp != '-' && info.type != 'u')
 	{
-		new_tmp = ft_strjoin(" ", *tmp);
-		free(*tmp);
-		*tmp = new_tmp;
+		*tmp = ft_strjoin_free(" ", *tmp, 2);
 		return (0);
 	}
 	return (1);
