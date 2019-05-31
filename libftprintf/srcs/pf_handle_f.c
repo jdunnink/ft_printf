@@ -91,11 +91,15 @@ int				pf_handle_f(char **tmp, t_spec info, va_list a_list)
 		*tmp = ft_strjoin_free("+", *tmp, 2);
 	if (ft_cinstr(*tmp, '.') == 0 && ft_cinstr(info.flags, '#') == 1)
 		*tmp = add_dot(*tmp);
-	if (ft_cinstr(info.flags, ' ') == 1)
+	if (ft_cinstr(info.flags, ' ') == 1 && **tmp != '-' && ft_cinstr(info.flags, '0') == 0)
 		*tmp = ft_strjoin_free(" ", *tmp, 2);
 	if (info.width_on == 1 && info.width > ft_strlen(*tmp) && ft_cinstr(info.flags, '0') == 0)
 		*tmp = pf_f_width(*tmp, info.width - ft_strlen(*tmp), info.flags, ' ');
 	else if (info.width_on == 1 && info.width > ft_strlen(*tmp) && ft_cinstr(info.flags, '0') == 1)
 		*tmp = pf_f_width_sign(*tmp, info.width - ft_strlen(*tmp), info.flags, '0');
+	if (ft_cinstr(info.flags, ' ') == 1 && **tmp == '0' && ft_cinstr(info.flags, '0') == 1)
+		**tmp = ' ';
+	else if (ft_cinstr(info.flags, ' ') == 1 && **tmp != '-' && ft_cinstr(info.flags, '0') == 1)
+		*tmp = ft_strjoin_free(" ", *tmp, 2);
 	return (1);
 }

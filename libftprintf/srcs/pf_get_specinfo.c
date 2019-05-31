@@ -85,40 +85,23 @@ t_spec			*pf_get_specinfo(char *format, t_spec *info)
 	char	*precision;
 	char	*width;
 
-	printf("\nget specinfo is called with: %s\n", format);
 	init_specs(&info, &precision, &width);
 	format++;
 	while (*format != '\0')
 	{
 		if (ft_cinstr("#-+0 lLh.123456789%jcspdiouUxXfFz", *format) == 0)
-		{
-			printf("    unrecognized character found --> break parsing\n");
 			break ;
-		}
 		if (*format == '.')
-		{
-			printf("    precision is enabled.\n");
 			info->prec_on = 1;
-		}
 		if (ft_cinstr("123456789", *format) == 1 && info->prec_on == 0)
-		{
-			printf("    width is enabled.\n");
 			info->width_on = 1;
-		}
 		field_specs(format, info, &precision, &width);
 		if (ft_cinstr("#-+ lLhjz", *format) == 1)
-		{
-			printf("    A flag characted was found: %c\n", *format);
 			info->flags = ft_stradd(info->flags, ft_ctostr(*format));
-		}
 		if (*format == '0' && info->width_on == 0 && info->prec_on == 0)
-		{
-			printf("    A flag characted was found: %c\n", *format);
 			info->flags = ft_stradd(info->flags, ft_ctostr(*format));
-		}
 		if (ft_cinstr("%cspdiouUXxfF", *format) == 1)
 		{
-			printf("    format type was found --> break parsing.\n");
 			load_fields(info, precision, width);
 			info->type = *format;
 			parse_typesize(info);

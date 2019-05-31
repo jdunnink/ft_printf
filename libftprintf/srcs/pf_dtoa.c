@@ -12,28 +12,91 @@
 
 #include "printf.h"
 
+
+static int		find_round(long double value)
+{
+	long long int	tmp;
+	size_t			count;
+
+	tmp = 0;
+	count = 0;
+	while (count <= 10)
+	{
+		value = value * 10;
+		tmp = tmp * 10;
+		tmp += (long long)value;
+		value -= (long long)value;
+		if (tmp == 0)
+			return (0);
+		count++;
+	}
+	if (tmp % 10 >= 5)
+		tmp = tmp + (10 - (tmp % 10));
+	while (tmp > 9)
+	{
+		tmp = tmp / 10;
+		count--;
+	}
+	if (tmp >= 5)
+		return (1);
+	else if (tmp == 1)
+		return (2);
+	return (0);
+}
+
+static void roundstr_recurs(char *ptr, size_t len)
+{
+	if (len == 0 || *ptr == '-' || *ptr == '+')
+		return ;
+	if (*ptr < '9' && *ptr >= '0')
+	{
+		*ptr = (*ptr) + 1;
+		return ;
+	}
+	else
+	{
+		if (*ptr != '.')
+			*ptr = '0';
+		roundstr_recurs(ptr - 1, len - 1);
+	}
+	return ;
+}
+static char *find_last_char(char *str)
+{
+	while (*(str + 1) != '\0')
+		str++;
+	return (str);
+}
+
 char	*pf_dtoa(long double value, int precision)
 {
 	char	*dest;
+	char	*sign;
 	char	*tmp;
-	char	*next;
-	int		count;
+	int res;
 
-	printf("	pf_toa is called with: %Lf and precision: %i\n", value, precision);	
+	sign = 0;
+	tmp = 0;
+	if (value < 0 && value > -1)
+		sign = ft_strdup("-");
 	tmp = pf_ltoa((long)value);
 	dest = ft_strjoin_free(tmp, ".", 1);
-	count = 0;
 	value = value - (long)value;
 	if (value < 0)
 		value = value * -1;
 	while (precision > 0)
 	{
+		precision--;
 		value = value * 10;
 		tmp = pf_ltoa((long)value);
-		value = value - (long)value;
-		next = ft_strjoin_free(dest, tmp, 3);
-		dest = next;
-		precision--;
+		dest = ft_strjoin_free(dest, tmp, 3);
+		value -= (long)value;
 	}
+	res = find_round(value);
+	tmp = find_last_char(dest);
+	if (res == 1 || (res == 2 && *tmp == '7'))
+		roundstr_recurs(tmp, ft_strlen(dest));
+	if (sign != 0)
+		dest = ft_strjoin_free(sign, dest, 3);
 	return (dest);
 }

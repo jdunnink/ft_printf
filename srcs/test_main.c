@@ -1,37 +1,38 @@
 
 #include <stdio.h>
+#include <time.h>
 #include "printf.h"
 
-float   float_rand(float min, float max)
+
+
+int     float_random_test(int max_width, int max_precis, int max_range);
+int     int_random_test(int max_width, int max_precis, int max_range);
+
+static void test_float(size_t test_num)
 {
-    float scale = rand() / (float) max;
-    return (min + scale * (max - min));
+    while (test_num > 0)
+    {
+        if(float_random_test(50, 50, 10) == -1)
+            return ;
+        test_num--;
+    }
+}
+
+static void test_int(size_t test_num)
+{
+    while (test_num > 0)
+    {
+        if(int_random_test(30, 30, 10) == -1)
+            return ;
+        test_num--;
+    }
 }
 
 int main(void)
 {
-    long double test;
+    srand((unsigned int)time(NULL));
 
-    int res;
-    int real_res;
-    size_t test_counter;
-    size_t fail_counter;
-
-    res = 0;
-    real_res = 0;
-    test_counter = 1000;
-    fail_counter = 0;
-    while (test_counter > 0)
-    {
-        test = float_rand(0, 999.999);
-        res = ft_printf("%+20.7Lf\n", test);
-        real_res = printf("%+20.7Lf\n", test);
-        printf("my printf returns   : %i\n", res);
-        printf("real printf returns : %i\n\n\n", real_res);
-        if (res != real_res)
-            fail_counter++;
-        printf("    current failures: %lu\n", fail_counter);
-        test_counter--;
-    }
+    test_int(500);
+    test_float(500);
     return (0);
 }
