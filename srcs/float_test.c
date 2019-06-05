@@ -25,17 +25,38 @@ static int float_printfcmp(char *format, float argument)
     int res;
     int real_res;
 
+    char *real_print;
+    char *my_print;
+
     res = 0;
     real_res = 0;
 
-    res = ft_printf(format, argument);
-    real_res = printf(format, argument);
+    
+
+    real_res = asprintf(&real_print, format, argument);
+    ft_putstr(real_print);
+    res = ft_asprintf(&my_print, format, argument);
+    ft_putstr(my_print);
+
+    if (ft_strcmp(my_print, real_print) != 0)
+    {
+        printf("\nERROR:  output strings do not match!\n");
+        printf("\ntestvalue --> %.30f\n", argument);
+        printf("    MY PRINTF:      %s", my_print);
+        printf("    REAL PRINTF:    %s", real_print);
+        return (1);
+    }
+
     if (res != real_res)
     {
+        printf("ERROR: return values did not match!\n");
+        printf("\ntestvalue --> %.30f\n", argument);
         printf("    myprintf output --> %i.\n", res);
         printf("    real printf output --> %i.\n", real_res);
         return (1);
     }
+    free(my_print);
+    free(real_print);
     return (0);
 }
 
@@ -47,10 +68,7 @@ static int float_test(char *format, float min, float max, size_t testnum)
     {
         test_float = float_rand(min, max);
         if (float_printfcmp(format, test_float) == 1)
-        {
-            printf("    ERROR: return values did not match.\n");
             return (-1);
-        }
         testnum--;
     }
     return (0);
@@ -71,7 +89,7 @@ int     float_random_test(int max_width, int max_precis, int max_range)
     prec_on = 0;
 
     format = ft_strdup("    ||%");
-    if(int_rand(101) >= 50)
+    if(int_rand(101) >= 20)
         format = ft_strjoin_free(format, " ", 1);
     if(int_rand(101) >= 50)
         format = ft_strjoin_free(format, "0", 1);

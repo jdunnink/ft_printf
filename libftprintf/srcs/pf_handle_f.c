@@ -25,36 +25,6 @@ static	char	*pf_f_width(char *arg, int pad_size, char *flags, char c)
 	return (dest);
 }
 
-static	char	*pf_f_width_sign(char *arg, int pad_size, char *flags, char c)
-{
-	char	*pad;
-	char	*dest;
-	char	*sign;
-	char	*tmp;
-
-	sign = 0;
-	if (*arg == '-' || *arg == '+')
-	{
-		tmp = arg + 1;
-		sign = ft_ctostr(*arg);
-	}
-	else
-		tmp = arg;
-	pad = pf_add_pad(pad_size, c);
-	if (ft_cinstr(flags, '-') == 1)
-		dest = ft_strjoin(tmp, pad);
-	else
-		dest = ft_strjoin(pad, tmp);
-	free(pad);
-	free(arg);
-	if (sign != 0)
-	{
-		arg = ft_strjoin_free(sign, dest, 3);
-		return (arg);
-	}
-	return (dest);
-}
-
 static	char	*add_dot(char *arg)
 {
 	char	*ptr;
@@ -75,6 +45,34 @@ static	char	*add_dot(char *arg)
 	return (arg);
 }
 
+static void		swap_signs(char *str)
+{
+	char tmp;
+	char *iter;
+	char *eval;
+
+	eval = str;
+	while (*str == ' ')
+		str++;
+	iter = str + 1;
+	while (*iter != '\0' && *iter != '.' && ft_cinstr(" 0-+", *iter) == 1)
+	{
+		if (*iter == '-' || *iter == '+')
+		{
+			tmp = *iter;
+			*iter = *str;
+			*str = tmp;
+		}
+		if (*iter == ' ' && *(iter + 1) != ' ' && *(iter + 1) != '\0')
+		{
+			tmp = *iter;
+			*iter = *str;
+			*str = tmp;
+		}
+		iter++;
+	}
+}
+
 int				pf_handle_f(char **tmp, t_spec info, va_list a_list)
 {
 	if (info.precis == 0 && info.prec_on == 1)
@@ -91,15 +89,12 @@ int				pf_handle_f(char **tmp, t_spec info, va_list a_list)
 		*tmp = ft_strjoin_free("+", *tmp, 2);
 	if (ft_cinstr(*tmp, '.') == 0 && ft_cinstr(info.flags, '#') == 1)
 		*tmp = add_dot(*tmp);
-	if (ft_cinstr(info.flags, ' ') == 1 && **tmp != '-' && ft_cinstr(info.flags, '0') == 0)
+	if (ft_cinstr(info.flags, ' ') && **tmp != '-')
 		*tmp = ft_strjoin_free(" ", *tmp, 2);
-	if (info.width_on == 1 && info.width > ft_strlen(*tmp) && ft_cinstr(info.flags, '0') == 0)
+	if (info.width_on == 1 && ft_strlen(*tmp) < info.width && ft_cinstr(info.flags, '0') == 1)
+		*tmp = pf_f_width(*tmp, info.width - ft_strlen(*tmp), info.flags, '0');
+	else if (info.width_on == 1 && ft_strlen(*tmp) < info.width && ft_cinstr(info.flags, '0') == 0)
 		*tmp = pf_f_width(*tmp, info.width - ft_strlen(*tmp), info.flags, ' ');
-	else if (info.width_on == 1 && info.width > ft_strlen(*tmp) && ft_cinstr(info.flags, '0') == 1)
-		*tmp = pf_f_width_sign(*tmp, info.width - ft_strlen(*tmp), info.flags, '0');
-	if (ft_cinstr(info.flags, ' ') == 1 && **tmp == '0' && ft_cinstr(info.flags, '0') == 1)
-		**tmp = ' ';
-	else if (ft_cinstr(info.flags, ' ') == 1 && **tmp != '-' && ft_cinstr(info.flags, '0') == 1)
-		*tmp = ft_strjoin_free(" ", *tmp, 2);
+	swap_signs(*tmp);
 	return (1);
 }

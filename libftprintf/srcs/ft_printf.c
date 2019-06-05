@@ -27,7 +27,7 @@ static	int	pf_dispatch(char **tmp, t_spec info, va_list a_list)
 	return (-1);
 }
 
-int			ft_printf(const char *restrict format, ...)
+int			ft_asprintf(char **dest, const char *restrict format, ...)
 {
 	va_list	a_list;
 	char	*tmp;
@@ -35,6 +35,7 @@ int			ft_printf(const char *restrict format, ...)
 	int		res;
 	t_spec	*info;
 
+	*dest = 0;
 	total_len = 0;
 	tmp = 0;
 	va_start(a_list, format);
@@ -55,8 +56,10 @@ int			ft_printf(const char *restrict format, ...)
 		else
 			tmp = ft_ctostr(*format);
 		total_len += ft_strlen(tmp);
-		ft_putstr(tmp);
-		free(tmp);
+		if (*dest == 0)
+			*dest = tmp;
+		else
+			*dest = ft_strjoin_free(*dest, tmp, 3);
 		if (res == -3)
 		{
 			total_len++;

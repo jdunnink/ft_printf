@@ -1,68 +1,64 @@
 
 #include "printf.h"
 
-static	char	*add_prefix(char *arg)
-{
-	char *prefix;
-	char *dest;
-
-	prefix = ft_strdup("0");
-	dest = ft_strjoin_free(prefix, arg, 3);
-	return (dest);
-}
-
-static	char	*pf_o_width(char *arg, int pad_size, char *flags)
+static	char	*pf_o_width(char *arg, int pad_size, t_spec info)
 {
 	char	*pad;
 	char	*dest;
+	char	c;
 
-	pad = pf_add_pad(pad_size, ' ');
-	if (ft_cinstr(flags, '-') == 1)
+	c = ' ';
+	if (ft_cinstr(info.flags, '0') == 1 && info.prec_on == 0)
+		c = '0';
+	pad = pf_add_pad(pad_size, c);
+	if (ft_cinstr(info.flags, '-') == 1)
 		dest = ft_strjoin_free(arg, pad, 3);
 	else
 		dest = ft_strjoin_free(pad, arg, 3);
 	return (dest);
 }
 
-static	char	*pf_o_precis(char *arg, int precis)
+static	char	*pf_o_precis(char *arg, int pad_size, char c)
 {
-	int	arg_len;
-	int	pad_len;
-	char	*padding;
+	char	*pad;
 	char	*dest;
 
-	arg_len = ft_strlen(arg);
-	if (precis <= arg_len)
-		return (arg);
-	pad_len = precis - arg_len;
-	padding = pf_add_pad(pad_len, '0');
-	dest = ft_strjoin_free(padding, arg, 3);
+	pad = pf_add_pad(pad_size, c);
+	dest = ft_strjoin_free(pad, arg, 3);
 	return (dest);
+}
+
+static size_t		count_digits(char *str)
+{
+	size_t count;
+
+	count = 0;
+	while (*str != '\0')
+	{
+		if (*str >= '0' && *str <= '9')
+			count++;
+		str++;
+	}
+	return (count);
 }
 
 int				pf_handle_o(char **tmp, t_spec info, va_list a_list)
 {
-    unsigned long long res;
+  unsigned long long res;
+	size_t check;
 
 	res = (unsigned long long)va_arg(a_list, unsigned long long);
 	if (res == 0)
         *tmp = ft_ctostr('0');
 	else
-    	*tmp = pf_toa_unsign(res, 8, info.type_size, 1);
-    if (info.prec_on == 1)
-		*tmp = pf_o_precis(*tmp, info.precis);
-	else if (info.width_on == 1 && ft_cinstr(info.flags, '0') == 1)
-	{
-		if (ft_cinstr(info.flags, '#') == 1)
-			*tmp = pf_o_precis(*tmp, info.width - 1);
-		else
-			*tmp = pf_o_precis(*tmp, info.width);
-	}
-	if (info.prec_on == 1 && info.precis == 0 && **tmp == '0')
-		*tmp = ft_strdup_exep(*tmp, '0');
-	if (ft_cinstr(info.flags, '#') == 1 && *tmp[0] != '0')
-		*tmp = add_prefix(*tmp);
-	if (info.width_on == 1 && info.width > ft_strlen(*tmp))
-		*tmp = pf_o_width(*tmp, info.width - ft_strlen(*tmp), info.flags);
+  	*tmp = pf_toa_unsign(res, 8, info.type_size, 1);
+	if (ft_cinstr(info.flags, '#') == 1 && **tmp != '0')
+		*tmp = ft_strjoin_free("0", *tmp, 2);
+	check = count_digits(*tmp);
+	if (info.prec_on == 1 && info.precis > check)
+		*tmp = pf_o_precis(*tmp, info.precis - check, '0');
+	check = ft_strlen(*tmp);
+	if (info.width_on == 1 && info.width > check)
+		*tmp = pf_o_width(*tmp, info.width - check, info);
 	return (1);
 }

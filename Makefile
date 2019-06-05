@@ -14,7 +14,8 @@ NAME = test
 
 SRC =	test_main.c		\
 		float_test.c	\
-		int_test.c	
+		int_test.c		\
+		uint_test.c		\
 
 OBJ = $(SRC:.c=.o)
 SRCDIR = srcs
@@ -25,7 +26,7 @@ OBJS = $(addprefix $(OBJDIR)/, $(OBJ))
 
 HEADER = -I includes/ -I libftprintf/includes/
 cc = gcc
-CFLAGS = 
+CFLAGS = -Wall -Wextra -Werror
 LIB = -L libftprintf/ -lftprintf
 
 .PHONY: all clean fclean re

@@ -12,95 +12,115 @@
 
 #include "printf.h"
 
-static size_t	count_digits(char *str)
-{
-	size_t digits;
-	size_t i;
-
-	digits = 0;
-	i = 0;
-	while (str[i] != '\0')
-	{
-		if (str[i] <= '9' && str[i] >= '0')
-			digits++;
-		i++;
-	}
-	return (digits);
-}
-
-static	char	*pf_idu_width(char *arg, int pad_size, char *flags, char c)
+static	char	*pf_idu_precis(char *arg, int pad_size, char c)
 {
 	char	*pad;
 	char	*dest;
 
 	pad = pf_add_pad(pad_size, c);
-	if (ft_cinstr(flags, '-') == 1)
+	dest = ft_strjoin_free(pad, arg, 3);
+	return (dest);
+}
+
+static	char	*pf_idu_width(char *arg, int pad_size, t_spec info)
+{
+	char	*pad;
+	char	*dest;
+	char	c;
+
+	c = ' ';
+	if (ft_cinstr(info.flags, '0') == 1 && info.prec_on == 0)
+		c = '0';
+	pad = pf_add_pad(pad_size, c);
+	if (ft_cinstr(info.flags, '-') == 1)
 		dest = ft_strjoin_free(arg, pad, 3);
 	else
 		dest = ft_strjoin_free(pad, arg, 3);
 	return (dest);
 }
 
-static	char	*pf_idu_precis(char *arg, int precis, int mode)
+static void		swap_signs(char *str)
 {
-	int		arg_len;
-	int		pad_len;
-	char	*padding;
-	char	*ptr;
-	char	*sign;
-
-	sign = 0;
-	if (mode == 2)
-		arg_len = count_digits(arg);
-	else
-		arg_len = ft_strlen(arg);
-	if (precis <= arg_len)
-		return (arg);
-	ptr = arg;
-	if (*arg == '-' || *arg == '+')
+	char tmp;
+	char *iter;
+	char *eval;
+	eval = str;
+	while (*str == ' ')
+		str++;
+	iter = str + 1;
+	while (*iter != '\0' && *iter != '.' && ft_cinstr(" 0-+", *iter) == 1)
 	{
-		ptr++;
-		sign = ft_strndup(arg, 1);
+		if (*iter == '-' || *iter == '+')
+		{
+			tmp = *iter;
+			*iter = *str;
+			*str = tmp;
+		}
+		iter++;
 	}
-	pad_len = precis - arg_len;
-	padding = pf_add_pad(pad_len, '0');
-	ptr = ft_strjoin(padding, ptr);
-	free(arg);
-	if (sign != 0)
-	{
-		arg = ft_strjoin_free(sign, ptr, 3);
-		return (arg);
-	}
-	return (ptr);
 }
+
+static size_t		count_digits(char *str)
+{
+	size_t count;
+
+	count = 0;
+	while (*str != '\0')
+	{
+		if (*str >= '0' && *str <= '9')
+			count++;
+		str++;
+	}
+	return (count);
+}
+
+static void	move_space(char *str)
+{
+	int digits;
+	char tmp;
+	char *swap;
+
+	swap = str;
+	digits  = count_digits(str);
+	if (*str == ' ')
+		return ;
+	while (*str != '\0' && digits > 0)
+	{
+		if (*str == ' ')
+		{
+			tmp = *str;
+			*str = *swap;
+			*swap = tmp;
+		}
+		str++;
+		digits--;
+	}
+}		
 
 int				pf_handle_idu(char **tmp, t_spec info, va_list a_list)
 {
+	size_t res;
+
 	if (ft_cinstr("id", info.type) == 1)
 		*tmp = pf_toa_sign(va_arg(a_list, intmax_t), 10, info.type_size, 1);
 	else if (ft_cinstr("uU", info.type) == 1)
 		*tmp = pf_toa_unsign(va_arg(a_list, unsigned long long), 10, info.type_size, 1);
-	if (**tmp == '\0')
+	if (**tmp == '\0' && info.prec_on == 0)
 		*tmp = ft_ctostr('0');
-	if (ft_cinstr(info.flags, '+') == 1 && **tmp != '-' && info.type != 'u')
+	if (info.prec_on == 1 && info.precis == 0 && **tmp == '0')
+		*tmp = ft_ctostr('\0');
+	if (ft_cinstr(info.flags, '+') == 1 && **tmp != '-' && ft_cinstr("Uu", info.type) == 0)
 		*tmp = ft_strjoin_free("+", *tmp, 2);
-	if (info.prec_on == 1 && info.precis > count_digits(*tmp))
-		*tmp = pf_idu_precis(*tmp, info.precis, 2);
-	if (info.width_on == 1 && ft_cinstr(info.flags, '0') == 1)
-		*tmp = pf_idu_precis(*tmp, info.width, 1);
-	if (info.width_on == 1 && ft_cinstr(info.flags, '0') == 0 && info.width > ft_strlen(*tmp))
-	{
-		if (ft_cinstr(info.flags, ' ') == 1 && ft_cinstr(info.flags, '-') == 1)
-			*tmp = pf_idu_width(*tmp, info.width - ft_strlen(*tmp) - 1, info.flags, ' ');
-		else
-			*tmp = pf_idu_width(*tmp, info.width - ft_strlen(*tmp), info.flags, ' ');
-	}
-	if (ft_cinstr(info.flags, ' ') == 1 && **tmp != ' ' && **tmp != '-')
-	{
-		if (count_digits(*tmp) > info.precis && **tmp < '1')
-			**tmp = ' ';
-		else
-			*tmp = ft_strjoin_free(" ", *tmp, 2);
-	}
+	res = count_digits(*tmp);
+	if (info.prec_on == 1 && info.precis > res)
+		*tmp = pf_idu_precis(*tmp, info.precis - res, '0');
+	if (ft_cinstr(info.flags, ' ') && ft_cinstr(*tmp, '-') == 0 && ft_cinstr("Uu", info.type) == 0)
+		*tmp = ft_strjoin_free(" ", *tmp, 2);
+	res = ft_strlen(*tmp);
+	if (info.width_on == 1 && info.width > res)
+		*tmp = pf_idu_width(*tmp, info.width - res, info);
+	swap_signs(*tmp);
+	if (ft_cinstr(info.flags, ' ') == 1)
+		move_space(*tmp);
 	return (1);
 }

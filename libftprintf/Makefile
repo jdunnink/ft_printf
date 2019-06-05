@@ -25,6 +25,7 @@ SRC =	ft_atoi.c			\
 		ft_strdup_exep.c	\
 		ft_strdup_until.c	\
 		ft_strjoin.c		\
+		ft_strcmp.c			\
 		ft_strjoin_free.c	\
 		ft_strlen.c			\
 		ft_strdup.c			\

@@ -21,7 +21,7 @@ typedef struct      s_spec
     int             type_size;
 }                   t_spec;
 
-int         ft_printf(const char * restrict format, ...);
+int         ft_asprintf(char **dest, const char * restrict format, ...);
 
 void        pf_flag_override(t_spec *format);           // handles flag precedence and removes duplicate flags
 t_spec      *pf_get_specinfo(char *format, t_spec *info); // parses the format string and interprents the format specifiers
@@ -42,6 +42,7 @@ char	    *ft_strdup_until(const char *s1, char end); // strdup until a given cha
 char        *ft_strjoin_free(char *s1, char *s2, int mode);  // ft_strjoin with optional free functionality.
 
 size_t      ft_strlen(const char *str);
+int         ft_strcmp(const char *s1, const char *s2);
 char	    *ft_strjoin(char const *s1, char const *s2);
 char        *ft_strcpy(char *dst, const char *src);
 char        *ft_strcat(char *s1, const char *s2);
