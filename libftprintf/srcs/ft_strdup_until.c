@@ -21,7 +21,7 @@ char	*ft_strdup_until(const char *s1, char end)
 	len = 0;
 	while (s1[len] != '\0' && s1[len] != end)
 		len++;
-	dest = (char *)malloc(sizeof(char) * len + 1);
+	dest = ft_strnew(len);
 	if (dest)
 	{
 		i = 0;
@@ -30,7 +30,6 @@ char	*ft_strdup_until(const char *s1, char end)
 			dest[i] = s1[i];
 			i++;
 		}
-		dest[i] = '\0';
 		return (dest);
 	}
 	return (0);

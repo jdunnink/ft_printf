@@ -33,6 +33,13 @@ SRC =	ft_atoi.c			\
 		ft_strnew.c			\
 		ft_putchar.c		\
 		ft_putstr.c			\
+		ft_isspace.c		\
+		ft_issign.c			\
+		ft_isdigit.c		\
+		ft_str_tail.c		\
+		ft_llintcmp.c		\
+		ft_count_digits.c	\
+		ft_move_sign.c		\
 		pf_flag_override.c	\
 		pf_get_specinfo.c	\
 		pf_handle_csp.c		\

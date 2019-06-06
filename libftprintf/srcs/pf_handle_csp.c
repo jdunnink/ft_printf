@@ -6,7 +6,7 @@
 /*   By: jdunnink <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/28 18:16:15 by jdunnink      #+#    #+#                 */
-/*   Updated: 2019/05/28 18:19:15 by jdunnink      ########   odam.nl         */
+/*   Updated: 2019/06/06 13:45:00 by jdunnink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ static	char	*pf_csp_width(char *arg, int width_on, int width, char *flags)
 {
 	char	*padding;
 	char	*dest;
-	int	ob_len;
-	int	pad_len;
+	int		ob_len;
+	int		pad_len;
 
 	ob_len = ft_strlen(arg);
 	if (width_on == 0 || width < ob_len)
@@ -29,11 +29,9 @@ static	char	*pf_csp_width(char *arg, int width_on, int width, char *flags)
 	padding[pad_len] = '\0';
 	ft_memset(padding, ' ', pad_len);
 	if (ft_cinstr(flags, '-') == 1)
-		dest = ft_strjoin(arg, padding);
+		dest = ft_strjoin_free(arg, padding, 3);
 	else
-		dest = ft_strjoin(padding, arg);
-	free(padding);
-	free(arg);
+		dest = ft_strjoin_free(padding, arg, 3);
 	return (dest);
 }
 
@@ -41,6 +39,11 @@ static	char	*pf_s_precis(char *arg, int prec_on, int precision)
 {
 	char *dest;
 
+	if (prec_on == 1 && precision == 0)
+	{
+		free(arg);
+		return (ft_ctostr('\0'));
+	}
 	if (prec_on == 0 || precision > (int)ft_strlen(arg))
 		return (arg);
 	dest = ft_strndup(arg, precision);
@@ -50,34 +53,17 @@ static	char	*pf_s_precis(char *arg, int prec_on, int precision)
 
 int				pf_handle_csp(char **arg, t_spec info, va_list a_list)
 {
-	char *tmp;
-	int ret;
-
-	ret = 1;
 	if (info.type == 'c')
-	{
 		*arg = ft_ctostr((char)va_arg(a_list, int));
-		if (**arg == '\0')
-		{
-			info.width--;
-			ret = -3;
-		}
-	}
 	else if (info.type == 's')
 	{
-		tmp = (char *)va_arg(a_list, char *);
-		if (tmp == 0 || tmp == NULL)
-			*arg = ft_strdup("(null)");
-		else
-			*arg = ft_strdup(tmp);
+		*arg = ft_strdup((char *)va_arg(a_list, char *));
 		*arg = pf_s_precis(*arg, info.prec_on, info.precis);
 	}
 	else if (info.type == 'p')
-		*arg = ft_strjoin("0x", ft_ptoa((void *)va_arg(a_list, void *), 16));
-	else if (info.type == '%')
-		*arg = ft_ctostr(info.type);
+		*arg = ft_strjoin_free("0x", ft_ptoa((void *)va_arg(a_list, void *), 16), 2);
 	else
-		return (-1);
+		*arg = ft_ctostr(info.type);
 	*arg = pf_csp_width(*arg, info.width_on, info.width, info.flags);
-	return (ret);
+	return (1);
 }

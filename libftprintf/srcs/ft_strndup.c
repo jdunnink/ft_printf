@@ -23,10 +23,9 @@ char	*ft_strndup(char *src, size_t nb)
 	if (len == 0)
 		return (0);
 	dest_len = nb;
-	dest = (char*)malloc(sizeof(char) * (dest_len + 1));
+	dest = ft_strnew(dest_len);
 	if (!dest)
 		return (0);
-	dest[dest_len] = '\0';
 	i = 0;
 	while (i < nb && i < len)
 	{

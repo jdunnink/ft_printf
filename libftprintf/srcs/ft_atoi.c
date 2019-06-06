@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "printf.h"
+
 int	ft_atoi(const char *str)
 {
 	int			i;
@@ -19,14 +21,13 @@ int	ft_atoi(const char *str)
 	res = 0;
 	i = 0;
 	neg = 1;
-	while (str[i] && (str[i] == ' ' || str[i] == '\n' || str[i] == '\t' ||
-					str[i] == '\v' || str[i] == '\f' || str[i] == '\r'))
+	while (str[i] && ft_isspace(str[i]) == 1)
 		++i;
 	if (str[i] == '-')
 		neg = -1;
-	if (str[i] == '-' || str[i] == '+')
+	if (ft_issign(str[i]) == 1)
 		i++;
-	while (str[i] >= '0' && str[i] <= '9')
+	while (ft_isdigit(str[i]) == 1)
 	{
 		res = res * 10 + str[i] - '0';
 		i++;

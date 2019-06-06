@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <limits.h>
 #include "printf.h"
@@ -35,8 +34,6 @@ static int int_printfcmp(const char *format, long long int argument)
         printf("    REAL PRINTF:    %s", real_print);
         printf("    myprintf output --> %i.\n", res);
         printf("    real printf output --> %i.\n", real_res);
-        free(my_print);
-        free(real_print);
         return (1);
     }
 
@@ -46,8 +43,6 @@ static int int_printfcmp(const char *format, long long int argument)
         printf("\ntestvalue --> %lli\n", argument);
         printf("    myprintf output --> %i.\n", res);
         printf("    real printf output --> %i.\n", real_res);
-        free(my_print);
-        free(real_print);
         return (1);
     }
     free(my_print);
@@ -55,16 +50,13 @@ static int int_printfcmp(const char *format, long long int argument)
     return (0);
 }
 
-static int int_test(char *format, long long int min, long long int max, size_t testnum)
+static int int_test(char *format, size_t testnum)
 {
     long long int test_int;
 
     while (testnum > 0)
     {
-        if (int_rand(101) >= 50)
-            test_int = int_rand(max);
-        else
-            test_int = (int_rand(min * -1) * -1);
+        test_int = 0;
         if (int_printfcmp(format, test_int) == 1)
             return (-1);
         testnum--;
@@ -72,9 +64,9 @@ static int int_test(char *format, long long int min, long long int max, size_t t
     return (0);
 }
 
-int     int_random_test(int max_width, int max_precis)
+int     int_random_test_zero(int max_width, int max_precis)
 {
-    int prec_on;
+       int prec_on;
     int width_on;
     int width_int;
     int precis_int;
@@ -83,7 +75,6 @@ int     int_random_test(int max_width, int max_precis)
     char *end_type;
     char *format;
     int random;
-    long long range;
 
     width_on = 0;
     prec_on = 0;
@@ -110,28 +101,16 @@ int     int_random_test(int max_width, int max_precis)
     else
         end_type = ft_strdup("d<<\n");
 
-    range = LLONG_MAX;
     random = int_rand(101);
     if(random <= 20)
-    {
-        range = CHAR_MAX;
         end_type = ft_strjoin_free("hh", end_type, 2);
-    }
     else if(random <= 40)
-    {
-        range = SHRT_MAX;
         end_type = ft_strjoin_free("h", end_type, 2);
-    }
     else if(random <= 60)
-    {
-        range = LONG_MAX;
         end_type = ft_strjoin_free("l", end_type, 2);
-    }
     else if (random <= 80)
-    {
-        range = LLONG_MAX;
         end_type = ft_strjoin_free("ll", end_type, 2);
-    }
+
     if (width_on == 1)
     {
         width_int = int_rand(max_width + 1);
@@ -147,10 +126,10 @@ int     int_random_test(int max_width, int max_precis)
     }
     format = ft_strjoin_free(format, end_type, 3);
     printf("\ntestformat --> %s\n", format);
-    if (int_test(format, range * - 1, range, 25) == -1)
+    if (int_test(format, 1) == -1)
     {
         free(format);
-        return (-1); 
+        return (-1);
     }
     free(format);
     return (0);

@@ -16,10 +16,12 @@ char	*ft_ctostr(char c)
 {
 	char	*dest;
 
-	dest = (char *)malloc(sizeof(char) * 2);
+	if (c == '\0')
+		dest = ft_strnew(0);
+	else
+		dest = ft_strnew(1);
 	if (!dest)
 		return (0);
 	dest[0] = c;
-	dest[1] = '\0';
 	return (dest);
 }

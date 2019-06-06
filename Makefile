@@ -13,9 +13,14 @@
 NAME = test
 
 SRC =	test_main.c		\
-		float_test.c	\
+		ldouble_test.c	\
 		int_test.c		\
 		uint_test.c		\
+		uint_test_zero.c\
+		int_test_zero.c	\
+		char_test.c		\
+		string_test.c	\
+		pointer_test.c	\
 
 OBJ = $(SRC:.c=.o)
 SRCDIR = srcs

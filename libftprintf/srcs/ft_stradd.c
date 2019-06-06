@@ -18,8 +18,6 @@ char	*ft_stradd(char *target, char *add)
 
 	if (target == 0)
 		return (add);
-	dest = ft_strjoin(target, add);
-	free(target);
-	free(add);
+	dest = ft_strjoin_free(target, add, 3);
 	return (dest);
 }

@@ -35,7 +35,7 @@ char		*ft_ptoa(void *pointer, int base)
 
 	n = (unsigned long long)pointer;
 	i = find_size(n, base);
-	dest = (char *)malloc(sizeof(char) * i + 1);
+	dest = ft_strnew(i);
 	if (!dest)
 		return (0);
 	if (pointer == 0)

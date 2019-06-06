@@ -10,15 +10,23 @@ static int int_rand(int max)
   return (scale);
 }
 
-static unsigned int uint_rand(unsigned long long int max)
+static int int_rand_range(int min, int max)
 {
-  unsigned long long int scale;
+    int num;
 
-  scale = rand() % max;
-  return (scale);
+    num = rand() % (max + 1 - min) + min;
+    return (num);
 }
 
-static int uint_printfcmp(const char *format, unsigned int argument)
+static int char_rand(int min, int max)
+{
+    char scale;
+
+    scale = int_rand_range(min, max);
+    return (scale);
+}
+
+static int char_printfcmp(const char *format, char argument)
 {
     int res;
     int real_res;
@@ -37,7 +45,7 @@ static int uint_printfcmp(const char *format, unsigned int argument)
     if (ft_strcmp(my_print, real_print) != 0)
     {
         printf("\nERROR:  output strings do not match!\n");
-        printf("\ntestvalue --> %u\n", argument);
+        printf("\ntestvalue --> %i\n", (int)argument);
         printf("    MY PRINTF:      %s", my_print);
         printf("    REAL PRINTF:    %s", real_print);
         printf("    myprintf output --> %i.\n", res);
@@ -48,7 +56,7 @@ static int uint_printfcmp(const char *format, unsigned int argument)
     if (res != real_res)
     {
         printf("ERROR: return values did not match!\n");
-        printf("\ntestvalue --> %u\n", argument);
+        printf("\ntestvalue --> %i\n", (int)argument);
         printf("    myprintf output --> %i.\n", res);
         printf("    real printf output --> %i.\n", real_res);
         return (1);
@@ -58,84 +66,43 @@ static int uint_printfcmp(const char *format, unsigned int argument)
     return (0);
 }
 
-static int uint_test(char *format, unsigned long long max_range, size_t testnum)
+static int char_test(char *format, int min, int max, size_t testnum)
 {
-    unsigned long long int test_uint;
+    char test_char;
 
     while (testnum > 0)
     {
-        test_uint = uint_rand(max_range);
-        if (uint_printfcmp(format, test_uint) == 1)
+        test_char = char_rand(min, max);
+        if (char_printfcmp(format, test_char) == 1)
             return (-1);
         testnum--;
     }
     return (0);
 }
 
-int     uint_random_test(int max_width, int max_precis)
+int     char_random_test(int max_width, int min, int max)
 {
-    int prec_on;
     int width_on;
     int width_int;
-    int precis_int;
+
     char *width;
-    char *precision;
     char *end_type;
     char *format;
-    int random;
-    unsigned long long range;
 
     width_on = 0;
-    prec_on = 0;
 
     format = ft_strdup("    >>%");
     if(int_rand(101) >= 50)
         format = ft_strjoin_free(format, " ", 1);
     if(int_rand(101) >= 50)
-        format = ft_strjoin_free(format, "0", 1);
-    if(int_rand(101) >= 50)
         format = ft_strjoin_free(format, "+", 1);
     if(int_rand(101) >= 50)
         format = ft_strjoin_free(format, "-", 1);
-    if(int_rand(101) >= 50)
-        format = ft_strjoin_free(format, "#", 1);
-    if(int_rand(101) >= 50)
-        prec_on = 1;
+
     if (int_rand(101) >= 50)
         width_on = 1;
 
-    random = int_rand(101);
-    if (random <= 25)
-        end_type = ft_strdup("u<<\n");
-    else if (random <= 50)
-        end_type = ft_strdup("x<<\n");
-    else if (random <= 75)
-        end_type = ft_strdup("X<<\n");
-    else
-        end_type = ft_strdup("o<<\n");
-
-    range = ULLONG_MAX;
-    random = int_rand(101);
-    if(random <= 20)
-    {
-        range = UCHAR_MAX;
-        end_type = ft_strjoin_free("hh", end_type, 2);
-    }
-    else if(random <= 40)
-    {
-        range = USHRT_MAX;
-        end_type = ft_strjoin_free("h", end_type, 2);
-    }
-    else if(random <= 60)
-    {
-        range = ULONG_MAX;
-        end_type = ft_strjoin_free("l", end_type, 2);
-    }
-    else if (random <= 80)
-    {
-        range = ULLONG_MAX;
-        end_type = ft_strjoin_free("ll", end_type, 2);
-    }
+    end_type = ft_strdup("c<<\n");
 
     if (width_on == 1)
     {
@@ -143,17 +110,10 @@ int     uint_random_test(int max_width, int max_precis)
         width = ft_itoa_base(width_int, 10);
         format = ft_strjoin_free(format, width, 3);
     }
-    if (prec_on == 1)
-    {
-        precis_int = int_rand(max_precis + 1);
-        precision = ft_itoa_base(precis_int, 10);
-        format = ft_strjoin_free(format, ".", 1);
-        format = ft_strjoin_free(format, precision, 3);
-    }
 
     format = ft_strjoin_free(format, end_type, 3);
     printf("\ntestformat --> %s\n", format);
-    if (uint_test(format, range, 25) == -1)
+    if (char_test(format, min, max, 10) == -1)
     {
         free(format);
         return (-1);

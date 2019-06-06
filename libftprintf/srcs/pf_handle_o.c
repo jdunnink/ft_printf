@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   pf_handle_o.c                                      :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jdunnink <marvin@codam.nl>                   +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2019/06/06 13:48:26 by jdunnink      #+#    #+#                 */
+/*   Updated: 2019/06/06 13:50:24 by jdunnink      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "printf.h"
 
@@ -28,7 +39,7 @@ static	char	*pf_o_precis(char *arg, int pad_size, char c)
 	return (dest);
 }
 
-static size_t		count_digits(char *str)
+static size_t	count_digits(char *str)
 {
 	size_t count;
 
@@ -44,14 +55,16 @@ static size_t		count_digits(char *str)
 
 int				pf_handle_o(char **tmp, t_spec info, va_list a_list)
 {
-  unsigned long long res;
-	size_t check;
+	unsigned long long	res;
+	size_t				check;
 
 	res = (unsigned long long)va_arg(a_list, unsigned long long);
-	if (res == 0)
-        *tmp = ft_ctostr('0');
+	if (res == 0 && info.prec_on == 1 && info.precis == 0)
+		*tmp = ft_ctostr('\0');
+	else if (res == 0)
+		*tmp = ft_ctostr('0');
 	else
-  	*tmp = pf_toa_unsign(res, 8, info.type_size, 1);
+		*tmp = pf_toa_unsign(res, 8, info.type_size, 1);
 	if (ft_cinstr(info.flags, '#') == 1 && **tmp != '0')
 		*tmp = ft_strjoin_free("0", *tmp, 2);
 	check = count_digits(*tmp);

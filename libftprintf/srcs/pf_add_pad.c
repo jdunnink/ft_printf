@@ -16,10 +16,9 @@ char	*pf_add_pad(size_t len, char c)
 {
 	char	*pad;
 
-	pad = (char*)malloc(sizeof(char) * len + 1);
+	pad = ft_strnew(len);
 	if (!pad)
 		return (0);
-	pad[len] = '\0';
 	ft_memset(pad, c, len);
 	return (pad);
 }

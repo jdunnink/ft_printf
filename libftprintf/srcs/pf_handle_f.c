@@ -6,7 +6,7 @@
 /*   By: jdunnink <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/28 18:19:35 by jdunnink      #+#    #+#                 */
-/*   Updated: 2019/05/28 18:26:30 by jdunnink      ########   odam.nl         */
+/*   Updated: 2019/06/06 13:51:33 by jdunnink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,56 +45,63 @@ static	char	*add_dot(char *arg)
 	return (arg);
 }
 
-static void		swap_signs(char *str)
+static void		move_space(char *str)
 {
-	char tmp;
-	char *iter;
-	char *eval;
+	int		digits;
+	char	tmp;
+	char	*swap;
 
-	eval = str;
-	while (*str == ' ')
-		str++;
-	iter = str + 1;
-	while (*iter != '\0' && *iter != '.' && ft_cinstr(" 0-+", *iter) == 1)
+	swap = str;
+	digits = ft_count_digits(str);
+	if (*str == ' ')
+		return ;
+	while (*str != '\0' && digits > 0)
 	{
-		if (*iter == '-' || *iter == '+')
+		if (*str == ' ')
 		{
-			tmp = *iter;
-			*iter = *str;
-			*str = tmp;
+			tmp = *str;
+			*str = *swap;
+			*swap = tmp;
 		}
-		if (*iter == ' ' && *(iter + 1) != ' ' && *(iter + 1) != '\0')
-		{
-			tmp = *iter;
-			*iter = *str;
-			*str = tmp;
-		}
-		iter++;
+		str++;
+		digits--;
 	}
 }
 
-int				pf_handle_f(char **tmp, t_spec info, va_list a_list)
+static	void	format_float(t_spec info, char **tmp)
 {
-	if (info.precis == 0 && info.prec_on == 1)
-		info.precis = 0;
-	else if (info.precis == 0 && info.prec_on == 0)
-		info.precis = 6;
-	if ((info.type == 'f' || info.type == 'F') && info.type_size == 2)
-		*tmp = pf_dtoa(va_arg(a_list, long double), info.precis);
-	else if (info.type == 'f' || info.type == 'F')
-		*tmp = pf_dtoa(va_arg(a_list, double), info.precis);
-	if (info.prec_on == 1 && info.precis == 0)
-		*tmp = ft_strdup_until(*tmp, '.');
 	if (ft_cinstr(info.flags, '+') && **tmp != '-')
 		*tmp = ft_strjoin_free("+", *tmp, 2);
 	if (ft_cinstr(*tmp, '.') == 0 && ft_cinstr(info.flags, '#') == 1)
 		*tmp = add_dot(*tmp);
-	if (ft_cinstr(info.flags, ' ') && **tmp != '-')
+	if (ft_cinstr(info.flags, ' ') == 1 && ft_cinstr(*tmp, '-') == 0 && ft_cinstr(*tmp, '+') == 0)
 		*tmp = ft_strjoin_free(" ", *tmp, 2);
 	if (info.width_on == 1 && ft_strlen(*tmp) < info.width && ft_cinstr(info.flags, '0') == 1)
 		*tmp = pf_f_width(*tmp, info.width - ft_strlen(*tmp), info.flags, '0');
 	else if (info.width_on == 1 && ft_strlen(*tmp) < info.width && ft_cinstr(info.flags, '0') == 0)
 		*tmp = pf_f_width(*tmp, info.width - ft_strlen(*tmp), info.flags, ' ');
-	swap_signs(*tmp);
+	move_space(*tmp);
+	ft_move_sign(*tmp);
+}
+
+int				pf_handle_f(char **tmp, t_spec info, va_list a_list)
+{
+	char *new_tmp;
+
+	if (info.precis == 0 && info.prec_on == 1)
+		info.precis = 0;
+	else if (info.precis == 0 && info.prec_on == 0)
+		info.precis = 6;
+	if (info.type_size == 2)
+		*tmp = pf_dtoa(va_arg(a_list, long double), info.precis);
+	else
+		*tmp = pf_dtoa(va_arg(a_list, double), info.precis);
+	if (info.prec_on == 1 && info.precis == 0)
+	{
+		new_tmp = ft_strdup_until(*tmp, '.');
+		free(*tmp);
+		*tmp = new_tmp;
+	}
+	format_float(info, tmp);
 	return (1);
 }

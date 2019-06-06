@@ -6,13 +6,13 @@
 /*   By: jdunnink <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/28 18:42:51 by jdunnink      #+#    #+#                 */
-/*   Updated: 2019/05/28 18:44:54 by jdunnink      ########   odam.nl         */
+/*   Updated: 2019/06/06 13:55:54 by jdunnink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "printf.h"
 
-static intmax_t	ft_maxabs(intmax_t nb)
+static	intmax_t	ft_maxabs(intmax_t nb)
 {
 	if (nb < 0)
 		return (nb * -1);
@@ -60,6 +60,8 @@ char				*pf_toa_sign(intmax_t value, int base, int type_size, int alphacase)
 	char		*dest;
 	char		*tab;
 
+	if (value == 0)
+		return (ft_ctostr('0'));
 	type_size = adjust_typesize(&value, type_size);
 	temp = (intmax_t)value;
 	if (temp < -9223372036854775807)

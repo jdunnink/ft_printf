@@ -1,17 +1,26 @@
 
+
 #include <stdio.h>
-#include <limits.h>
+#include <time.h>
 #include "printf.h"
 
-static long long int int_rand(long long int max)
+static float ldouble_rand(long double min, long double max)
 {
-  long long int scale;
+    long double scale;
+    
+    scale = rand() / (float) RAND_MAX;
+    return (min + scale * ( max - min ));
+}
+
+static int int_rand(int max)
+{
+  int scale;
 
   scale = rand() % max;
   return (scale);
 }
 
-static int int_printfcmp(const char *format, long long int argument)
+static int ldouble_printfcmp(char *format, long double argument)
 {
     int res;
     int real_res;
@@ -30,24 +39,22 @@ static int int_printfcmp(const char *format, long long int argument)
     if (ft_strcmp(my_print, real_print) != 0)
     {
         printf("\nERROR:  output strings do not match!\n");
-        printf("\ntestvalue --> %lli\n", argument);
+        printf("\ntestvalue --> %.30Lf\n", argument);
         printf("    MY PRINTF:      %s", my_print);
         printf("    REAL PRINTF:    %s", real_print);
         printf("    myprintf output --> %i.\n", res);
         printf("    real printf output --> %i.\n", real_res);
-        free(my_print);
-        free(real_print);
         return (1);
     }
 
     if (res != real_res)
     {
         printf("ERROR: return values did not match!\n");
-        printf("\ntestvalue --> %lli\n", argument);
+        printf("\ntestvalue --> %.30Lf\n", argument);
         printf("    myprintf output --> %i.\n", res);
         printf("    real printf output --> %i.\n", real_res);
-        free(my_print);
-        free(real_print);
+        printf("    MY PRINTF:      %s", my_print);
+        printf("    REAL PRINTF:    %s", real_print);
         return (1);
     }
     free(my_print);
@@ -55,24 +62,21 @@ static int int_printfcmp(const char *format, long long int argument)
     return (0);
 }
 
-static int int_test(char *format, long long int min, long long int max, size_t testnum)
+static int ldouble_test(char *format, long double min, long double max, size_t testnum)
 {
-    long long int test_int;
+    long double test_ldouble;
 
     while (testnum > 0)
     {
-        if (int_rand(101) >= 50)
-            test_int = int_rand(max);
-        else
-            test_int = (int_rand(min * -1) * -1);
-        if (int_printfcmp(format, test_int) == 1)
+        test_ldouble = ldouble_rand(min, max);
+        if (ldouble_printfcmp(format, test_ldouble) == 1)
             return (-1);
         testnum--;
     }
     return (0);
 }
 
-int     int_random_test(int max_width, int max_precis)
+int     ldouble_random_test(int max_width, int max_precis, long double max_range)
 {
     int prec_on;
     int width_on;
@@ -82,14 +86,13 @@ int     int_random_test(int max_width, int max_precis)
     char *precision;
     char *end_type;
     char *format;
-    int random;
-    long long range;
+    int res;
 
     width_on = 0;
     prec_on = 0;
 
     format = ft_strdup("    >>%");
-    if(int_rand(101) >= 50)
+    if(int_rand(101) >= 20)
         format = ft_strjoin_free(format, " ", 1);
     if(int_rand(101) >= 50)
         format = ft_strjoin_free(format, "0", 1);
@@ -103,35 +106,15 @@ int     int_random_test(int max_width, int max_precis)
         prec_on = 1;
     if (int_rand(101) >= 50)
         width_on = 1;
+    
+    end_type = ft_strdup("f<<\n");
 
-    random = int_rand(101);
-    if (random <= 50)
-        end_type = ft_strdup("i<<\n");
-    else
-        end_type = ft_strdup("d<<\n");
-
-    range = LLONG_MAX;
-    random = int_rand(101);
-    if(random <= 20)
-    {
-        range = CHAR_MAX;
-        end_type = ft_strjoin_free("hh", end_type, 2);
-    }
-    else if(random <= 40)
-    {
-        range = SHRT_MAX;
-        end_type = ft_strjoin_free("h", end_type, 2);
-    }
-    else if(random <= 60)
-    {
-        range = LONG_MAX;
+    res = int_rand(101);
+    if(res <= 10)
         end_type = ft_strjoin_free("l", end_type, 2);
-    }
-    else if (random <= 80)
-    {
-        range = LLONG_MAX;
-        end_type = ft_strjoin_free("ll", end_type, 2);
-    }
+    else if (res <= 90)
+        end_type = ft_strjoin_free("L", end_type, 2);
+
     if (width_on == 1)
     {
         width_int = int_rand(max_width + 1);
@@ -145,9 +128,10 @@ int     int_random_test(int max_width, int max_precis)
         format = ft_strjoin_free(format, ".", 1);
         format = ft_strjoin_free(format, precision, 3);
     }
+
     format = ft_strjoin_free(format, end_type, 3);
     printf("\ntestformat --> %s\n", format);
-    if (int_test(format, range * - 1, range, 25) == -1)
+    if (ldouble_test(format, int_rand(max_range + 1) * -1, int_rand(max_range + 1), 10) == -1)
     {
         free(format);
         return (-1); 

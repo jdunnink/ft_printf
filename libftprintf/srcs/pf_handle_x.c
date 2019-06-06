@@ -6,7 +6,7 @@
 /*   By: jdunnink <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/28 18:39:27 by jdunnink      #+#    #+#                 */
-/*   Updated: 2019/05/28 18:39:29 by jdunnink      ########   odam.nl         */
+/*   Updated: 2019/06/06 13:56:14 by jdunnink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static	char	*add_prefix(char *arg, char type)
 	char *prefix;
 	char *dest;
 
-	if(check_for_zero(arg) == 1)
+	if (check_for_zero(arg) == 1)
 		return (arg);
 	if (type == 'X')
 		prefix = ft_strdup("0X");
@@ -69,7 +69,8 @@ static	char	*pf_x_precis(char *arg, int precis)
 
 int				pf_handle_x(char **tmp, t_spec info, va_list a_list)
 {
-	unsigned long long res;
+	unsigned long long	res;
+	char				*new_tmp;
 
 	res = (unsigned long long)va_arg(a_list, unsigned long long);
 	if (res == 0)
@@ -81,7 +82,11 @@ int				pf_handle_x(char **tmp, t_spec info, va_list a_list)
 	if (info.prec_on == 1)
 		*tmp = pf_x_precis(*tmp, info.precis);
 	if (info.prec_on == 1 && info.precis == 0 && **tmp == '0')
-		*tmp = ft_strdup_exep(*tmp, '0');
+	{
+		new_tmp = ft_strdup_exep(*tmp, '0');
+		free(*tmp);
+		*tmp = new_tmp;
+	}
 	else if (info.width_on == 1 && ft_cinstr(info.flags, '0') == 1 && info.prec_on == 0)
 	{
 		if (ft_cinstr(info.flags, '#') == 1 && check_for_zero(*tmp) == 0)

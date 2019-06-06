@@ -16,7 +16,6 @@ typedef struct      s_spec
     unsigned int    width_on;
     unsigned int    precis;
     int             prec_on;
-    size_t          spec_len;
     char            type;
     int             type_size;
 }                   t_spec;
@@ -24,7 +23,7 @@ typedef struct      s_spec
 int         ft_asprintf(char **dest, const char * restrict format, ...);
 
 void        pf_flag_override(t_spec *format);           // handles flag precedence and removes duplicate flags
-t_spec      *pf_get_specinfo(char *format, t_spec *info); // parses the format string and interprents the format specifiers
+t_spec      *pf_get_specinfo(char **format, t_spec *info); // parses the format string and interprents the format specifiers
 int         pf_handle_csp(char **arg, t_spec info, va_list a_list); // handle csp and % formats
 int         pf_handle_idu(char **tmp, t_spec info, va_list a_list); // handle idu formats
 int         pf_handle_x(char **tmp, t_spec info, va_list a_list);  // handle xX formats
@@ -53,6 +52,13 @@ long int	ft_labs(long int nb);
 char        *ft_strdup(const char *s1);
 void        ft_putchar(char c);
 void        ft_putstr(char *str);
+int         ft_isspace(char c);
+int         ft_issign(char c);
+int         ft_isdigit(char c);
+char        *ft_str_tail(char *str);
+int         ft_llintcmp(int one, int two);
+size_t      ft_count_digits(char *str);
+void        ft_move_sign(char *str);
 
 char		*ft_itoa_base(int value, int base);
 char		*pf_toa_sign(intmax_t value, int base, int type_size, int alphacase);
