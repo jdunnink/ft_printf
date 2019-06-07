@@ -1,18 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_str_tail.c                                      :+:    :+:            */
+/*   ft_str_only.c                                      :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jdunnink <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/06/07 09:49:05 by jdunnink      #+#    #+#                 */
-/*   Updated: 2019/06/07 09:49:16 by jdunnink      ########   odam.nl         */
+/*   Created: 2019/06/07 09:54:43 by jdunnink      #+#    #+#                 */
+/*   Updated: 2019/06/07 09:54:56 by jdunnink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-char	*ft_str_tail(char *str)
+int		ft_str_only(char *str, char c)
 {
-	while (*(str + 1) != '\0')
+	while (*str != '\0')
+	{
+		if (*str != c)
+			return (0);
 		str++;
-	return (str);
+	}
+	return (1);
 }

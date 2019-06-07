@@ -12,13 +12,14 @@
 
 #include "printf.h"
 
-char	*pf_add_pad(size_t len, char c)
+char	*ft_strnew_c(size_t len, char c)
 {
-	char	*pad;
+	char	*str;
 
-	pad = ft_strnew(len);
-	if (!pad)
+	str = (char*)malloc(sizeof(char) * len + 1);
+	if (!str)
 		return (0);
-	ft_memset(pad, c, len);
-	return (pad);
+	str[len] = '\0';
+	ft_memset(str, c, len);
+	return (str);
 }

@@ -6,13 +6,13 @@
 /*   By: jdunnink <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/28 18:42:51 by jdunnink      #+#    #+#                 */
-/*   Updated: 2019/06/06 13:55:54 by jdunnink      ########   odam.nl         */
+/*   Updated: 2019/06/07 10:10:17 by jdunnink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "printf.h"
 
-static	intmax_t	ft_maxabs(intmax_t nb)
+static	long long	ft_maxabs(long long nb)
 {
 	if (nb < 0)
 		return (nb * -1);
@@ -20,7 +20,7 @@ static	intmax_t	ft_maxabs(intmax_t nb)
 		return (nb);
 }
 
-static int			adjust_typesize(intmax_t *value, int typesize)
+static int			adjust_typesize(long long *value, int typesize)
 {
 	if (typesize == -2)
 		*value = (char)*value;
@@ -35,7 +35,7 @@ static int			adjust_typesize(intmax_t *value, int typesize)
 	return (typesize);
 }
 
-static	int			find_size(intmax_t value, int base)
+static	int			find_size(long long value, int base)
 {
 	int i;
 	int neg;
@@ -53,35 +53,46 @@ static	int			find_size(intmax_t value, int base)
 	return (i + neg);
 }
 
-char				*pf_toa_sign(intmax_t value, int base, int type_size, int alphacase)
+static char			*get_case(int alphacase)
+{
+	char *tab;
+
+	if (alphacase == 2)
+		tab = ft_strdup("0123456789ABCDEF");
+	else
+		tab = ft_strdup("0123456789abcdef");
+	return (tab);
+}
+
+char				*pf_toa_sign(long long val, int b, int type_size, int alph)
 {
 	int			len;
-	intmax_t	temp;
 	char		*dest;
 	char		*tab;
+	int			sign;
 
-	if (value == 0)
+	printf("toasign is called with: %lld\n", val);
+
+	if (val < -9223372036854775807)
+		return (ft_strdup("-9223372036854775808"));
+	sign = 0;
+	if (val == 0)
 		return (ft_ctostr('0'));
-	type_size = adjust_typesize(&value, type_size);
-	temp = (intmax_t)value;
-	if (temp < -9223372036854775807)
-		return ("-9223372036854775808");
-	if (alphacase == 2)
-		tab = "0123456789ABCDEF";
-	else
-		tab = "0123456789abcdef";
-	if (base < 2 || base > 16)
-		return (NULL);
-	len = find_size(temp, base);
-	temp = ft_maxabs(temp);
+	type_size = adjust_typesize(&val, type_size);
+	if (val < 0)
+		sign = 1;
+	tab = get_case(alph);
+	len = find_size(val, b);
+	val = ft_maxabs(val);
 	dest = ft_strnew(len);
 	while (len)
 	{
 		len--;
-		dest[len] = tab[(temp % base)];
-		temp /= base;
+		dest[len] = tab[(val % b)];
+		val /= b;
 	}
-	if (value < 0 && base == 10)
+	if (sign == 1 && b == 10)
 		dest[0] = '-';
+	free(tab);
 	return (dest);
 }

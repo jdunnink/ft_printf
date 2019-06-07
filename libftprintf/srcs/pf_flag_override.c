@@ -6,7 +6,7 @@
 /*   By: jdunnink <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/28 18:06:05 by jdunnink      #+#    #+#                 */
-/*   Updated: 2019/05/28 18:09:18 by jdunnink      ########   odam.nl         */
+/*   Updated: 2019/06/07 09:57:51 by jdunnink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,26 +34,26 @@ static	char	*remove_dup(char *str)
 	return (dest);
 }
 
-void			pf_flag_override(t_spec *format)
+void			pf_flag_override(t_spec *f)
 {
 	char *new_flags;
 
-	if (ft_cinstr(format->flags, '-') == 1 && ft_cinstr(format->flags, '0') == 1)
+	if (ft_cinstr(f->flags, '-') == 1 && ft_cinstr(f->flags, '0') == 1)
 	{
-		new_flags = ft_strdup_exep(format->flags, '0');
-		free(format->flags);
-		format->flags = new_flags;
+		new_flags = ft_strdup_exep(f->flags, '0');
+		free(f->flags);
+		f->flags = new_flags;
 	}
-	if (ft_cinstr(format->flags, ' ') == 1 && ft_cinstr(format->flags, '+') == 1)
+	if (ft_cinstr(f->flags, ' ') == 1 && ft_cinstr(f->flags, '+') == 1)
 	{
-		new_flags = ft_strdup_exep(format->flags, ' ');
-		free(format->flags);
-		format->flags = new_flags;
+		new_flags = ft_strdup_exep(f->flags, ' ');
+		free(f->flags);
+		f->flags = new_flags;
 	}
-	if (format->flags != 0 && ft_strlen(format->flags) > 1)
+	if (f->flags != 0 && ft_strlen(f->flags) > 1)
 	{
-		new_flags = remove_dup(format->flags);
-		free(format->flags);
-		format->flags = new_flags;
+		new_flags = remove_dup(f->flags);
+		free(f->flags);
+		f->flags = new_flags;
 	}
 }

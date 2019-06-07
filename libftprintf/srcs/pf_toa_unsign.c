@@ -6,7 +6,7 @@
 /*   By: jdunnink <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/28 18:45:37 by jdunnink      #+#    #+#                 */
-/*   Updated: 2019/05/28 18:47:07 by jdunnink      ########   odam.nl         */
+/*   Updated: 2019/06/07 10:11:09 by jdunnink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,28 +38,26 @@ static int	find_size(unsigned long long value, int base)
 	return (i);
 }
 
-char		*pf_toa_unsign(unsigned long long value, int base, int type_size, int alphacase)
+char		*pf_toa_unsign(unsigned long long val, int b, int type_size, int a)
 {
 	int			len;
 	char		*dest;
 	char		*tab;
 
-	type_size = adjust_typesize(&value, type_size);
-	if (value == 0)
+	type_size = adjust_typesize(&val, type_size);
+	if (val == 0)
 		return (ft_ctostr('0'));
-	if (alphacase == 2)
+	if (a == 2)
 		tab = "0123456789ABCDEF";
 	else
 		tab = "0123456789abcdef";
-	if (base < 2 || base > 16)
-		return (NULL);
-	len = find_size(value, base);
+	len = find_size(val, b);
 	dest = ft_strnew(len);
 	while (len)
 	{
 		len--;
-		dest[len] = tab[(value % base)];
-		value /= base;
+		dest[len] = tab[(val % b)];
+		val /= b;
 	}
 	return (dest);
 }

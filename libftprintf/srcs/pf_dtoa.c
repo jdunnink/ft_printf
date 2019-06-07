@@ -6,7 +6,7 @@
 /*   By: jdunnink <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/27 07:38:44 by jdunnink      #+#    #+#                 */
-/*   Updated: 2019/06/06 13:47:35 by jdunnink      ########   odam.nl         */
+/*   Updated: 2019/06/07 09:55:53 by jdunnink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,12 @@ static void		add_round_digit(char **str)
 	}
 }
 
-static void	round_f(long double value, char **dest)
+static void		round_f(long double value, char **dest)
 {
 	int		res;
 	char	*tmp;
+
+	printf(" round_f is called with value: %Lf and string: %s\n", value, *dest);
 
 	tmp = ft_str_tail(*dest);
 	if (ft_isdigit(*tmp) == 0)
@@ -67,29 +69,46 @@ static void	round_f(long double value, char **dest)
 
 char			*pf_dtoa(long double value, int precision)
 {
-	char	*dest;
-	char	*sign;
-	char	*tmp;
+	char *first;
+	int tmp;
+	long double back_end;
 
-	sign = 0;
-	tmp = 0;
-	if (value < 0 && value > -1)
-		sign = ft_ctostr('-');
-	tmp = pf_ltoa((long)value);
-	dest = ft_strjoin_free(tmp, ".", 1);
-	value = value - (long)value;
 	if (value < 0)
 		value = value * -1;
+
+	/* 
+
+		alternatively, the first part can be derived by moving one digit passed the zero and then cutting off the rest.
+		bringing back that digit and then casting yields the last digit of the long double format. so -->
+		456.7345345.
+		becomes
+		45.7345345
+		becomes
+		0.7345345
+		becomes
+		7.345345
+		becomes
+		7
+
+		repeat until the entire string is parsed.
+
+	*/
+
+
+	back_end = value - (unsigned long long)value;
+	first = pf_toa_unsign((unsigned long long) value, 10, 2, 1);
+	first = ft_stradd(first, ft_ctostr('.'));
+	back_end = back_end * 10;
 	while (precision > 0)
 	{
+		tmp = (int)back_end;
+		first = ft_stradd(first, pf_ltoa(tmp));
+		back_end = back_end - (int)back_end;
+		back_end = back_end * 10;
 		precision--;
-		value = value * 10;
-		tmp = pf_ltoa((long)value);
-		dest = ft_strjoin_free(dest, tmp, 3);
-		value -= (long)value;
 	}
-	round_f(value, &dest);
-	if (sign != 0)
-		dest = ft_strjoin_free(sign, dest, 3);
-	return (dest);
+	round_f(back_end / 10, &first);
+	printf(" rounding value based on backend: %Lf\n", back_end / 10);
+
+	return (first);
 }

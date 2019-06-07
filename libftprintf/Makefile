@@ -6,7 +6,7 @@
 #    By: jdunnink <marvin@codam.nl>                   +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/03/20 09:33:47 by jdunnink      #+#    #+#                  #
-#    Updated: 2019/05/28 18:40:21 by jdunnink      ########   odam.nl          #
+#    Updated: 2019/06/07 09:51:55 by jdunnink      ########   odam.nl          #
 #                                                                              #
 #******************************************************************************#
 
@@ -18,6 +18,8 @@ SRC =	ft_atoi.c			\
 		ft_ptoa.c			\
 		ft_labs.c			\
 		ft_memset.c			\
+		ft_asprintf.c		\
+		ft_vasprintf.c		\
 		ft_printf.c			\
 		ft_stradd.c			\
 		ft_strcat.c			\
@@ -37,9 +39,10 @@ SRC =	ft_atoi.c			\
 		ft_issign.c			\
 		ft_isdigit.c		\
 		ft_str_tail.c		\
-		ft_llintcmp.c		\
 		ft_count_digits.c	\
 		ft_move_sign.c		\
+		ft_str_only.c		\
+		ft_strnew_c.c		\
 		pf_flag_override.c	\
 		pf_get_specinfo.c	\
 		pf_handle_csp.c		\
@@ -51,7 +54,6 @@ SRC =	ft_atoi.c			\
 		pf_toa_unsign.c		\
 		pf_dtoa.c			\
 		pf_ltoa.c			\
-		pf_add_pad.c		\
 
 OBJ = $(SRC:.c=.o)
 

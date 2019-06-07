@@ -6,7 +6,7 @@
 /*   By: jdunnink <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/28 18:09:49 by jdunnink      #+#    #+#                 */
-/*   Updated: 2019/05/28 18:15:50 by jdunnink      ########   odam.nl         */
+/*   Updated: 2019/06/07 09:55:31 by jdunnink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static	void	parse_typesize(t_spec *info)
 	}
 }
 
-static	void	load_fields(t_spec *info, char *p, char *w)
+static	void	load_fields(t_spec *info, char *p, char *w, char **format)
 {
 	if (info->prec_on == 1 && p != 0)
 	{
@@ -73,6 +73,7 @@ static	void	load_fields(t_spec *info, char *p, char *w)
 	}
 	pf_flag_override(info);
 	parse_typesize(info);
+	info->type = **format;
 }
 
 t_spec			*pf_get_specinfo(char **format, t_spec *info)
@@ -96,8 +97,7 @@ t_spec			*pf_get_specinfo(char **format, t_spec *info)
 			info->flags = ft_stradd(info->flags, ft_ctostr(**format));
 		else if (ft_cinstr("%cspdiouxXf", **format) == 1)
 		{
-			load_fields(info, precision, width);
-			info->type = **format;
+			load_fields(info, precision, width, format);
 			return (info);
 		}
 		*format = *format + 1;

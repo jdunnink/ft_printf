@@ -6,7 +6,7 @@
 /*   By: jdunnink <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/28 18:16:15 by jdunnink      #+#    #+#                 */
-/*   Updated: 2019/06/06 13:45:00 by jdunnink      ########   odam.nl         */
+/*   Updated: 2019/06/07 09:59:37 by jdunnink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,9 @@ static	char	*pf_csp_width(char *arg, int width_on, int width, char *flags)
 	if (width_on == 0 || width < ob_len)
 		return (arg);
 	pad_len = width - ob_len;
-	padding = (char*)malloc(sizeof(char) * (width - ob_len) + 1);
+	padding = ft_strnew_c(pad_len, ' ');
 	if (!padding)
 		return (arg);
-	padding[pad_len] = '\0';
-	ft_memset(padding, ' ', pad_len);
 	if (ft_cinstr(flags, '-') == 1)
 		dest = ft_strjoin_free(arg, padding, 3);
 	else
@@ -51,19 +49,34 @@ static	char	*pf_s_precis(char *arg, int prec_on, int precision)
 	return (dest);
 }
 
-int				pf_handle_csp(char **arg, t_spec info, va_list a_list)
+int				pf_handle_csp(char **arg, t_spec info, va_list a)
 {
+	char *tmp_str;
+	int		tmp_char;
+
+	tmp_char = 1;
 	if (info.type == 'c')
-		*arg = ft_ctostr((char)va_arg(a_list, int));
+	{
+		tmp_char = (char)va_arg(a, int);
+		*arg = ft_ctostr(tmp_char);
+	}
 	else if (info.type == 's')
 	{
-		*arg = ft_strdup((char *)va_arg(a_list, char *));
+		tmp_str = (char *)va_arg(a, char *);
+		if (tmp_str == NULL)
+			*arg = ft_strdup("(null)");
+		else
+			*arg = ft_strdup(tmp_str);
 		*arg = pf_s_precis(*arg, info.prec_on, info.precis);
 	}
 	else if (info.type == 'p')
-		*arg = ft_strjoin_free("0x", ft_ptoa((void *)va_arg(a_list, void *), 16), 2);
+		*arg = ft_strjoin_free("0x", ft_ptoa(va_arg(a, void *), 16), 2);
 	else
 		*arg = ft_ctostr(info.type);
+	if (tmp_char == 0 && info.width_on == 1)
+		info.width--;
 	*arg = pf_csp_width(*arg, info.width_on, info.width, info.flags);
+	if (tmp_char == 0)
+		return (0);
 	return (1);
 }

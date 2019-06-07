@@ -49,11 +49,10 @@ char				*pf_ltoa(long int n)
 	temp = ll;
 	neg = is_negative(&ll);
 	len = find_length(ll, neg);
-	dest = (char*)malloc(sizeof(char) * len);
+	dest = ft_strnew(len);
 	if (!dest)
 		return (NULL);
 	len--;
-	dest[len] = '\0';
 	while (len > 0)
 	{
 		len--;

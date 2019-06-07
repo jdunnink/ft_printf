@@ -21,7 +21,7 @@ static	char	*pf_o_width(char *arg, int pad_size, t_spec info)
 	c = ' ';
 	if (ft_cinstr(info.flags, '0') == 1 && info.prec_on == 0)
 		c = '0';
-	pad = pf_add_pad(pad_size, c);
+	pad = ft_strnew_c(pad_size, c);
 	if (ft_cinstr(info.flags, '-') == 1)
 		dest = ft_strjoin_free(arg, pad, 3);
 	else
@@ -34,7 +34,7 @@ static	char	*pf_o_precis(char *arg, int pad_size, char c)
 	char	*pad;
 	char	*dest;
 
-	pad = pf_add_pad(pad_size, c);
+	pad = ft_strnew_c(pad_size, c);
 	dest = ft_strjoin_free(pad, arg, 3);
 	return (dest);
 }
