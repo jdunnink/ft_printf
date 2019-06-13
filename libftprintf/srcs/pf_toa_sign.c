@@ -71,8 +71,6 @@ char				*pf_toa_sign(long long val, int b, int type_size, int alph)
 	char		*tab;
 	int			sign;
 
-	printf("toasign is called with: %lld\n", val);
-
 	if (val < -9223372036854775807)
 		return (ft_strdup("-9223372036854775808"));
 	sign = 0;

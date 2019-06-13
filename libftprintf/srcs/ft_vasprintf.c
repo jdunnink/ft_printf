@@ -2,6 +2,8 @@
 
 static	int	pf_dispatch(char **tmp, t_spec info, va_list a_list)
 {
+	if (a_list == NULL)
+		return (-1);
 	if (ft_cinstr("%csp", info.type) == 1)
 		return (pf_handle_csp(tmp, info, a_list));
 	else if (ft_cinstr("idu", info.type) == 1)

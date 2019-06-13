@@ -21,6 +21,7 @@ SRC =	test_main.c		\
 		char_test.c		\
 		string_test.c	\
 		pointer_test.c	\
+		float_test.c	\
 
 OBJ = $(SRC:.c=.o)
 SRCDIR = srcs
