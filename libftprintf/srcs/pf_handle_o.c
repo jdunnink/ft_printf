@@ -56,7 +56,7 @@ static size_t	count_digits(char *str)
 int				pf_handle_o(char **tmp, t_spec info, va_list a_list)
 {
 	unsigned long long	res;
-	size_t				check;
+	int					check;
 
 	res = (unsigned long long)va_arg(a_list, unsigned long long);
 	if (res == 0 && info.prec_on == 1 && info.precis == 0)

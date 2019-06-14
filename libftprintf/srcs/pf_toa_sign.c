@@ -6,21 +6,13 @@
 /*   By: jdunnink <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/28 18:42:51 by jdunnink      #+#    #+#                 */
-/*   Updated: 2019/06/07 10:10:17 by jdunnink      ########   odam.nl         */
+/*   Updated: 2019/06/14 09:56:18 by jdunnink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "printf.h"
 
-static	long long	ft_maxabs(long long nb)
-{
-	if (nb < 0)
-		return (nb * -1);
-	else
-		return (nb);
-}
-
-static int			adjust_typesize(long long *value, int typesize)
+static void			adjust_typesize(long long *value, int typesize)
 {
 	if (typesize == -2)
 		*value = (char)*value;
@@ -32,7 +24,6 @@ static int			adjust_typesize(long long *value, int typesize)
 		*value = (long)*value;
 	else if (typesize == 2)
 		*value = (long long)*value;
-	return (typesize);
 }
 
 static	int			find_size(long long value, int base)
@@ -44,7 +35,7 @@ static	int			find_size(long long value, int base)
 	neg = 0;
 	if (value < 0 && base == 10)
 		neg = 1;
-	value = ft_maxabs(value);
+	value = ft_llabs(value);
 	while (value > 0)
 	{
 		value /= base;
@@ -64,7 +55,18 @@ static char			*get_case(int alphacase)
 	return (tab);
 }
 
-char				*pf_toa_sign(long long val, int b, int type_size, int alph)
+static	int			init_var(int *sign, long long *val, int type_size)
+{
+	*sign = 0;
+	if (*val == 0)
+		return (-1);
+	adjust_typesize(val, type_size);
+	if (*val < 0)
+		*sign = 1;
+	return (0);
+}
+
+char				*pf_toa_sign(long long val, int b, int t, int alph)
 {
 	int			len;
 	char		*dest;
@@ -73,15 +75,11 @@ char				*pf_toa_sign(long long val, int b, int type_size, int alph)
 
 	if (val < -9223372036854775807)
 		return (ft_strdup("-9223372036854775808"));
-	sign = 0;
-	if (val == 0)
+	if (init_var(&sign, &val, t) == -1)
 		return (ft_ctostr('0'));
-	type_size = adjust_typesize(&val, type_size);
-	if (val < 0)
-		sign = 1;
 	tab = get_case(alph);
 	len = find_size(val, b);
-	val = ft_maxabs(val);
+	val = ft_llabs(val);
 	dest = ft_strnew(len);
 	while (len)
 	{

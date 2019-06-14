@@ -85,10 +85,10 @@ static	void	format_f(t_spec info, char **tmp)
 	if (ft_cinstr(info.flags, ' ') == 1 && ft_cinstr(*tmp, '-') == 0 &&
 		ft_cinstr(*tmp, '+') == 0)
 		*tmp = ft_strjoin_free(" ", *tmp, 2);
-	if (info.width_on == 1 && ft_strlen(*tmp) < info.width &&
+	if (info.width_on == 1 && (int)ft_strlen(*tmp) < info.width &&
 		ft_cinstr(info.flags, '0') == 1)
 		*tmp = pf_f_width(*tmp, info.width - ft_strlen(*tmp), info.flags, '0');
-	else if (info.width_on == 1 && ft_strlen(*tmp) < info.width &&
+	else if (info.width_on == 1 && (int)ft_strlen(*tmp) < info.width &&
 			ft_cinstr(info.flags, '0') == 0)
 		*tmp = pf_f_width(*tmp, info.width - ft_strlen(*tmp), info.flags, ' ');
 	move_space(*tmp);

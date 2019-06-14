@@ -78,7 +78,7 @@ static	void	format_x(t_spec info, char **tmp, unsigned long long res)
 	}
 	if (ft_cinstr(info.flags, '#') == 1 && res != 0)
 		*tmp = add_prefix(*tmp, info.type);
-	if (info.width_on == 1 && info.width > ft_strlen(*tmp))
+	if (info.width_on == 1 && info.width > (int)ft_strlen(*tmp))
 		*tmp = pf_x_width(*tmp, info.width - ft_strlen(*tmp), info.flags);
 }
 

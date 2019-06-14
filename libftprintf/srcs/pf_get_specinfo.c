@@ -49,11 +49,12 @@ static	void	parse_typesize(t_spec *info)
 			break ;
 		if (flags[i] == 'h' && flags[i + 1] == 'h')
 			info->type_size = -2;
-		else if ((flags[i] == 'l' && flags[i + 1] == 'l') || flags[i] == 'L')
+		else if ((flags[i] == 'l' && flags[i + 1] == 'l') ||
+				flags[i] == 'j')
 			info->type_size = 2;
 		else if (flags[i] == 'h')
 			info->type_size = -1;
-		else if (flags[i] == 'l')
+		else if (flags[i] == 'l' || flags[i] == 'z')
 			info->type_size = 1;
 		i++;
 	}
@@ -74,6 +75,10 @@ static	void	load_fields(t_spec *info, char *p, char *w, char **format)
 	pf_flag_override(info);
 	parse_typesize(info);
 	info->type = **format;
+	if (info->type == 'U')
+		info->type_size = 1;
+	else if (ft_cinstr(info->flags, 'L') == 1 && info->type == 'f')
+		info->type_size = 2;
 }
 
 t_spec			*pf_get_specinfo(char **format, t_spec *info)
@@ -84,18 +89,18 @@ t_spec			*pf_get_specinfo(char **format, t_spec *info)
 	init_specs(&info, &precision, &width);
 	while (**format != '\0')
 	{
-		if (ft_cinstr("#-+0 lLh.123456789%cspdiouxXf", **format) == 0)
+		if (ft_cinstr("#-+0 jzlLh.123456789%cspdiouUxXf", **format) == 0)
 			break ;
 		else if (**format == '.')
 			info->prec_on = 1;
 		else if (ft_cinstr("123456789", **format) == 1 && info->prec_on == 0)
 			info->width_on = 1;
 		field_specs(*format, info, &precision, &width);
-		if (ft_cinstr("#-+ lLh", **format) == 1)
+		if (ft_cinstr("#-+ lLhjz", **format) == 1)
 			info->flags = ft_stradd(info->flags, ft_ctostr(**format));
 		else if (**format == '0' && info->width_on == 0 && info->prec_on == 0)
 			info->flags = ft_stradd(info->flags, ft_ctostr(**format));
-		else if (ft_cinstr("%cspdiouxXf", **format) == 1)
+		else if (ft_cinstr("%cspdiouUxXf", **format) == 1)
 		{
 			load_fields(info, precision, width, format);
 			return (info);

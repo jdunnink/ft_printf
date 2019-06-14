@@ -6,7 +6,7 @@
 #    By: jdunnink <marvin@codam.nl>                   +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/03/20 09:33:47 by jdunnink      #+#    #+#                  #
-#    Updated: 2019/06/07 09:51:55 by jdunnink      ########   odam.nl          #
+#    Updated: 2019/06/14 08:42:59 by jdunnink      ########   odam.nl          #
 #                                                                              #
 #******************************************************************************#
 
@@ -37,7 +37,7 @@ SRC =	pf_flag_override.c	\
 		ft_isspace.c		\
 		ft_itoa_base.c		\
 		ft_labs.c			\
-		ft_ld_make_zero.c	\
+		ft_llabs.c			\
 		ft_memset.c			\
 		ft_move_sign.c		\
 		ft_ptoa.c			\

@@ -1,25 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   pf_add_pad.c                                       :+:    :+:            */
+/*   ft_llabs.c                                         :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jdunnink <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/05/28 18:02:52 by jdunnink      #+#    #+#                 */
-/*   Updated: 2019/05/28 18:03:19 by jdunnink      ########   odam.nl         */
+/*   Created: 2019/06/14 09:23:00 by jdunnink      #+#    #+#                 */
+/*   Updated: 2019/06/14 09:23:02 by jdunnink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "printf.h"
 
-char	*ft_strnew_c(size_t len, char c)
+long long	ft_llabs(long long nb)
 {
-	char	*str;
-
-	str = (char*)malloc(sizeof(char) * len + 1);
-	if (!str)
-		return (0);
-	str[len] = '\0';
-	ft_memset(str, c, len);
-	return (str);
+	if (nb < 0)
+		return (nb * -1);
+	else
+		return (nb);
 }

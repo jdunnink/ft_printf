@@ -64,7 +64,7 @@ static void		move_space(char *str)
 
 static void		format_int(t_spec info, char **tmp)
 {
-	size_t res;
+	int res;
 
 	if (ft_cinstr(info.flags, '+') == 1 && **tmp != '-' && info.type != 'u')
 		*tmp = ft_strjoin_free("+", *tmp, 2);
@@ -86,7 +86,7 @@ int				pf_handle_idu(char **tmp, t_spec i, va_list a)
 {
 	if (ft_cinstr("id", i.type) == 1)
 		*tmp = pf_toa_sign(va_arg(a, long long), 10, i.type_size, 1);
-	else if (i.type == 'u')
+	else if (i.type == 'u' || i.type == 'U')
 		*tmp = pf_toa_unsign(va_arg(a, unsigned long long), 10, i.type_size, 1);
 	if (i.prec_on == 1 && i.precis == 0 && **tmp == '0')
 	{

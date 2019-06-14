@@ -6,7 +6,7 @@
 /*   By: jdunnink <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/28 18:16:15 by jdunnink      #+#    #+#                 */
-/*   Updated: 2019/06/07 09:59:37 by jdunnink      ########   odam.nl         */
+/*   Updated: 2019/06/14 08:46:52 by jdunnink      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,26 +49,32 @@ static	char	*pf_s_precis(char *arg, int prec_on, int precision)
 	return (dest);
 }
 
+static	void	pf_get_char(va_list a, char **arg, int *tmp_char)
+{
+	*tmp_char = (char)va_arg(a, int);
+	*arg = ft_ctostr(*tmp_char);
+}
+
+static void		pf_get_str(t_spec info, va_list a, char **arg, char **tmp_str)
+{
+	*tmp_str = (char *)va_arg(a, char *);
+	if (*tmp_str == NULL)
+		*arg = ft_strdup("(null)");
+	else
+		*arg = ft_strdup(*tmp_str);
+	*arg = pf_s_precis(*arg, info.prec_on, info.precis);
+}
+
 int				pf_handle_csp(char **arg, t_spec info, va_list a)
 {
-	char *tmp_str;
-	int		tmp_char;
+	char		*tmp_str;
+	int			tmp_char;
 
 	tmp_char = 1;
 	if (info.type == 'c')
-	{
-		tmp_char = (char)va_arg(a, int);
-		*arg = ft_ctostr(tmp_char);
-	}
+		pf_get_char(a, arg, &tmp_char);
 	else if (info.type == 's')
-	{
-		tmp_str = (char *)va_arg(a, char *);
-		if (tmp_str == NULL)
-			*arg = ft_strdup("(null)");
-		else
-			*arg = ft_strdup(tmp_str);
-		*arg = pf_s_precis(*arg, info.prec_on, info.precis);
-	}
+		pf_get_str(info, a, arg, &tmp_str);
 	else if (info.type == 'p')
 		*arg = ft_strjoin_free("0x", ft_ptoa(va_arg(a, void *), 16), 2);
 	else

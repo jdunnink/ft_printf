@@ -102,14 +102,18 @@ int     int_random_test_zero(int max_width, int max_precis)
         end_type = ft_strdup("d<<\n");
 
     random = int_rand(101);
-    if(random <= 20)
+    if(random <= 15)
         end_type = ft_strjoin_free("hh", end_type, 2);
-    else if(random <= 40)
+    else if(random <= 30)
         end_type = ft_strjoin_free("h", end_type, 2);
-    else if(random <= 60)
+    else if(random <= 45)
         end_type = ft_strjoin_free("l", end_type, 2);
-    else if (random <= 80)
+    else if (random <= 60)
         end_type = ft_strjoin_free("ll", end_type, 2);
+    else if (random <= 75)
+        end_type = ft_strjoin_free("z", end_type, 2);
+    else if (random <= 90)
+        end_type = ft_strjoin_free("j", end_type, 2);
 
     if (width_on == 1)
     {

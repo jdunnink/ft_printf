@@ -1,12 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   ft_vasprintf.c                                     :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jdunnink <marvin@codam.nl>                   +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2019/06/14 08:08:57 by jdunnink      #+#    #+#                 */
+/*   Updated: 2019/06/14 09:53:57 by jdunnink      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "printf.h"
 
 static	int	pf_dispatch(char **tmp, t_spec info, va_list a_list)
 {
-	if (a_list == NULL)
-		return (-1);
 	if (ft_cinstr("%csp", info.type) == 1)
 		return (pf_handle_csp(tmp, info, a_list));
-	else if (ft_cinstr("idu", info.type) == 1)
+	else if (ft_cinstr("iduU", info.type) == 1)
 		return (pf_handle_idu(tmp, info, a_list));
 	else if (ft_cinstr("xX", info.type) == 1)
 		return (pf_handle_x(tmp, info, a_list));
@@ -35,7 +45,7 @@ static	int	read_specifier(char **format, va_list a_list, char **tmp, int *sig)
 	return (res);
 }
 
-static void		write_buf(char **buf, size_t *total, size_t *curr, int *sig)
+static void	write_buf(char **buf, size_t *total, size_t *curr, int *sig)
 {
 	write(1, *buf, *curr);
 	free(*buf);
@@ -45,37 +55,39 @@ static void		write_buf(char **buf, size_t *total, size_t *curr, int *sig)
 	*sig = 0;
 }
 
-int			ft_vasprintf(char **dest, const char *format, va_list a)
+static void	init_var(int *sig, size_t *total, size_t *curr, char **tmp)
+{
+	*sig = 0;
+	*total = 0;
+	*curr = 0;
+	*tmp = 0;
+}
+
+int			ft_vasprintf(char **d, const char *f, va_list a, int res)
 {
 	char	*tmp;
 	size_t	total_len;
 	size_t	curr_len;
-	int sig;
-	int res;
+	int		sig;
 
-	*dest = 0;
-	total_len = 0;
-	curr_len = 0;
-	tmp = 0;
-	sig = 0;
-	res = 0;
-	while (*format != '\0')
+	init_var(&sig, &total_len, &curr_len, &tmp);
+	while (*f != '\0')
 	{
-		if (*format == '%')
+		if (*f == '%')
 		{
-			res = read_specifier((char**)&format, a, &tmp, &sig);
+			res = read_specifier((char**)&f, a, &tmp, &sig);
 			if (res == 0)
 				curr_len++;
 			else if (res == -1)
 				return (0);
 		}
 		else
-			tmp = ft_ctostr(*format);
+			tmp = ft_ctostr(*f);
 		curr_len += ft_strlen(tmp);
-		*dest = ft_stradd(*dest, tmp);
-		if (curr_len >= BUFF_SIZE || *(format + 1) == '\0' || sig == 1)
-			write_buf(dest, &total_len, &curr_len, &sig);
-		format++;
+		*d = ft_stradd(*d, tmp);
+		if (curr_len >= BUFF_SIZE || *(f + 1) == '\0' || sig == 1)
+			write_buf(d, &total_len, &curr_len, &sig);
+		f++;
 	}
 	return (total_len);
 }

@@ -47,7 +47,7 @@ static int ldouble_printfcmp(char *format, long double argument)
     if (ft_strcmp(my_print, real_print) != 0)
     {
         printf("\nERROR:  output strings do not match!\n");
-        printf("\ntestvalue --> %.50Lf\n", argument);
+        printf(ft_strjoin("\ntestvalue -->", format), argument);
         printf("    MY PRINTF:      %s", my_print);
         printf("    REAL PRINTF:    %s", real_print);
         printf("    myprintf output --> %i.\n", res);
@@ -58,7 +58,7 @@ static int ldouble_printfcmp(char *format, long double argument)
     if (res != real_res)
     {
         printf("ERROR: return values did not match!\n");
-        printf("\ntestvalue --> %.50Lf\n", argument);
+        printf(ft_strjoin("\ntestvalue -->", format), argument);
         printf("    myprintf output --> %i.\n", res);
         printf("    real printf output --> %i.\n", real_res);
         printf("    MY PRINTF:      %s", my_print);
