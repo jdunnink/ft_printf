@@ -25,7 +25,7 @@ static long double ldouble_rand(long double min, long double max)
     return (min + scale * ( max - min ));
 }
 
-*/
+
 
 static int test_double(size_t test_num, long long int max_range)
 {
@@ -37,6 +37,8 @@ static int test_double(size_t test_num, long long int max_range)
     }
     return (1);
 }
+
+*/
 
 static int test_int(size_t test_num)
 {
@@ -122,7 +124,9 @@ int main(void)
 
     int test_size;
 
-    test_size = 10000;
+    test_size = 500;
+
+/*
 
     if(test_double(test_size / 10, 1) == - 1)
         return (0);
@@ -157,7 +161,9 @@ int main(void)
     if(test_double(test_size / 10, 10000000000) == - 1)
         return (0);
 
-    if(test_int(test_size) == - 1)
+*/
+
+    if(test_int(test_size) == -1)
         return (0);
 
     if(test_uint(test_size * 3) == -1)
