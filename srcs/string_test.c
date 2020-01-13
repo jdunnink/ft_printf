@@ -115,10 +115,10 @@ int     string_random_test(int max_width, int max_precis, int min, int max)
     prec_on = 0;
 
     format = ft_strdup("    >>%");
-    if(int_rand(101) >= 50)
-        format = ft_strjoin_free(format, " ", 1);
-    if(int_rand(101) >= 50)
-        format = ft_strjoin_free(format, "+", 1);
+//    if(int_rand(101) >= 50)
+//        format = ft_strjoin_free(format, " ", 1);
+//    if(int_rand(101) >= 50)
+//        format = ft_strjoin_free(format, "+", 1);
     if(int_rand(101) >= 50)
         format = ft_strjoin_free(format, "-", 1);
 

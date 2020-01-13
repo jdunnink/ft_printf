@@ -89,16 +89,16 @@ int     int_random_test(int max_width, int max_precis)
     prec_on = 0;
 
     format = ft_strdup("    >>%");
-    if(int_rand(101) >= 50)
-        format = ft_strjoin_free(format, " ", 1);
+//    if(int_rand(101) >= 50)
+//        format = ft_strjoin_free(format, " ", 1);
     if(int_rand(101) >= 50)
         format = ft_strjoin_free(format, "0", 1);
-    if(int_rand(101) >= 50)
-        format = ft_strjoin_free(format, "+", 1);
+//    if(int_rand(101) >= 50)
+//        format = ft_strjoin_free(format, "+", 1);
     if(int_rand(101) >= 50)
         format = ft_strjoin_free(format, "-", 1);
-    if(int_rand(101) >= 50)
-        format = ft_strjoin_free(format, "#", 1);
+//    if(int_rand(101) >= 50)
+//        format = ft_strjoin_free(format, "#", 1);
     if(int_rand(101) >= 50)
         prec_on = 1;
     if (int_rand(101) >= 50)
@@ -110,7 +110,9 @@ int     int_random_test(int max_width, int max_precis)
     else
         end_type = ft_strdup("d<<\n");
 
+
     range = LLONG_MAX;
+/*
     random = int_rand(101);
     if(random <= 20)
     {
@@ -132,6 +134,8 @@ int     int_random_test(int max_width, int max_precis)
         range = LLONG_MAX;
         end_type = ft_strjoin_free("ll", end_type, 2);
     }
+*/
+
     if (width_on == 1)
     {
         width_int = int_rand(max_width + 1);

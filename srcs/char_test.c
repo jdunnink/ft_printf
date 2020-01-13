@@ -92,10 +92,10 @@ int     char_random_test(int max_width, int min, int max)
     width_on = 0;
 
     format = ft_strdup("    >>%");
-    if(int_rand(101) >= 50)
-        format = ft_strjoin_free(format, " ", 1);
-    if(int_rand(101) >= 50)
-        format = ft_strjoin_free(format, "+", 1);
+//    if(int_rand(101) >= 50)
+//      format = ft_strjoin_free(format, " ", 1);
+//    if(int_rand(101) >= 50)
+//        format = ft_strjoin_free(format, "+", 1);
     if(int_rand(101) >= 50)
         format = ft_strjoin_free(format, "-", 1);
 
